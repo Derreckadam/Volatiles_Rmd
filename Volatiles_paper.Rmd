@@ -1,0 +1,367 @@
+---
+title: "Zygomycetes and Serratia marcescens, A Stinky Microbial Bully"
+output: html_notebook
+---
+#Abstract:
+*Serratia marcescens* lives a lifestyle of diversity and ubiquity. Found nearly everywhere this bacteria is capable of living as a saprobe in soil and water, but also living in community with plants and other rhizobacteria, and in addition as a pathogen to plants, animals and other microbes. Besides being a beautiful example of life’s ability to adapt to survive, Serratia also provides insight to one interesting aspect of microbiology. How do bacteria and fungi communicate?  We have identified multiple strains of Serratia from unique niches and compared their ability to inhibit the growth of common soil inhabitants known to interact with plants, Mucoromycota. 
+
+*Importance*: Understanding interactions of a member of a larger community gives us insight into how that community functions as whole. In addition, learning about a key player helps us understand how these communities are formed and in turn, allows us to utilize these communities for protection of agriculture and humans. Zygomycetes can cause severe disease and death, discovering inhibition techniques used by bacteria may lead to solutions in the field of medicine. 
+
+#Introduction: 
+Fungi, plants, and bacteria have evolved together for millenia. Serratia has demonstrated itself as a major contributor to community assembly (Zhang et al. 2018), to pathogenicity of insects, fungi, other bacteria, coral, and humans  (Aryal et al. 2017; Kamensky et al. 2003; Plyuta et al. 2016; Patterson et al. 2002; Mahlen 2011). (Zygomycetes are important to agriculture as they are being shown to colonize roots and help with nutrient acquisition) 
+
+There are many publications indicating the potential of enterobacteria to produce volatiles, some even report Serratia’s volatiles (Yu et al. 2000; Kai et al. 2010; Weise et al. 2014). These volatiles can be absorbed by strawberries (Yu et al. 2000). A few volatiles have been shown to inhibit fungal growth (Popova et al. 2014). The inhibition of growth in not well understood, nor is the process of production of the volatiles, except in one particular case, Sodorifen (Schmidt et al. 2017). Known volatiles include ketones such as 2-undecanone, 2-tridecanone, and 2-pentadecanone and other organic compounds such as dimethyl disulfide. 
+Other groups have found that the bacteria can utilize the hyphae as a transport mechanism (Zhang et al. 2018).  We show that this interaction can be interrupted if the bacteria reach quorum before the Zygomycetes come in contact. We believe this inhibition of growth is due to the production of a bouquet of volatiles produced by many Serratia species. We can validate our predictions using Gas Chromatography coupled with Mass Spectroscopy and inhibition assays we developed for this research. 
+
+*Hypothesis*: Strains of *Serratia marcescens* isolated from different environments variably inhibits growth of many zygomycetes. 
+Or
+Serratia produces volatiles that inhibit Zygomycete growth.
+
+
+#Methods: 
+Inhibition assay: Ratio of mycelium area with volatiles/mycelium area without volatiles. Spore count was predicted using hemocytometer. Bacteria grown overnight at 28º then approximately 10^6 CFU were plated on outside of 100mm petri dish on LB. Inside is a 60 mm petri dish filled with CMA. After 72 hours the 500 spores/conidia are added to the CMA plates. After 2 days mycelium is collected and resuspended in a 25 ml .01% Tween 20 solution. Spores are quantified using a hemocytometer. 
+To measure pure volatiles DMDS and 2-undecanone we used 100mm plates with 20 ml of Cornmeal Agar. Five 1,000 spore inoculations were placed around the plate with a microscope coverslip placed in the center. 2.5 µl of DMDS and 2-undecanone were place in the middle of the coverslip with stepping dilutions of 10. Growth was measured after 24 hours. 
+Growth rates were measured using Dr. Caroline Roper’s Spectrophotometer. Every 60 minutes 8 reading were taken from each well, averaged, and the results were combined and ANOVA was used to measure statistical significance. 
+Fresh strawberries were purchased from a local supermarket, washed with sterile water and weighed. Strawberries with 75% red color and at least 100 gm were carried forward for use in the experiment.
+Fruit was bruised with cork borer and 100 spores were added to the injury. The fruit was incubated with three day old 60mm petri-dishes containing LB Agar. The fruit, fungi, and serratia were combined together in a sealed quart-sized plastic bag. After 48 hours, the lesion on the fruit was measured then macerated and spores were calculated using a hemocytometer.  
+Various strains used:
+ADJS-2C_red (NCBI Accession number), ADJS-2D_white, ADJS-2C_purple, are from cricket, ATCC 13880 was isolated from pond water, JES_110 was isolated from Rhizopus stolonifer isolated from strawberry. Accession numbers (SAMN08373106, SAMN08373107, SAMN08373108, SAMN08373109, SAMN08373110)
+Zygomycete strains were provided by Gerald Benny for a collaborative community sequencing project, ZyGoLife through the Joint Genome Institute. 
+
+#Results:
+POTENTIALLY FIGURE 1A - Serratia’s inhibition relies on a population density. So inhibition capacity increasing as days on plate increases. 
+
+Figure 1a - Plate-ducken, top to bottom left to right, Rhizopus stolonifer with no bacteria, R. stolonifer covered with a lid with Serratia marcescens ADJS-2C Red, R. stolonifer exposed to volatiles of Serratia marcescens, R. stolonifer with known inhibitor E. coli.
+```{r setup, include=FALSE, echo=FALSE}
+require("knitr")
+opts_knit$set(root.dir = "/Users/derreck_carter-house/Google Drive File Stream/My Drive/Lab/Serratia/Bacterial Fungal Interactions Wet Lab Work/")
+#install.packages(c("ggplot2", "reshape2", "wesanderson", "tidyverse", "readxl"))
+```
+
+
+```{r}
+# Get Rhizopus data with many strains (0,24,48 Hour incubation)
+library(readxl)
+Rhizo <- read_excel("Volatile.xlsx", sheet = "Serratia Multistrain Analysis")
+Rhizo.bk <- Rhizo
+#print(Rhizo)
+
+# Transform the table for ggplot2
+library(reshape2)
+## Melt transforms a wide df into a long df
+Rhizo.m <- melt(as.data.frame(Rhizo), id.vars = "Strain")
+colnames(Rhizo.m) <- c("Strain","Time","Growth")
+```
+
+```{r, fig.height=12, fig.width=12}
+library(ggplot2) 
+ggplot(data = Rhizo.m, aes(x=Time, y=Growth, fill=Strain)) + geom_boxplot() + facet_grid(Strain ~ .)
+```
+
+```{r}
+
+#Rhizopus data with on S. pro, S. mar, and B. subtilis
+library(readxl)
+Rhizo <- read_excel("Volatile.xlsx", sheet = "Serratia Multistrain Analysis")
+Rhizo.bk <- Rhizo
+#print(Rhizo)
+
+# Transform the table for ggplot2
+library(reshape2)
+## Melt transforms a wide df into a long df
+Rhizo.m <- melt(as.data.frame(Rhizo), id.vars = "Strain")
+colnames(Rhizo.m) <- c("Strain","Time","Growth")
+## For loop to obtaim averages and stdv
+Strain.unique <- unique(Rhizo$Strain)
+Strain.list <- list()
+
+for (i in 1:length(Strain.unique)){
+  # Subset the data frame into each strain
+  df.test <- Rhizo[Rhizo$Strain %in% Strain.unique[i],]
+  # The second element of an apply means: 1 = Rows, 2 = Columns
+  # This means we are going to do the mean for all columns in the df
+  Strain.list[[i]] <- data.frame(Strain=Strain.unique[i], Time=c("0","24","48"), mean=apply(df.test[,-1],2,mean), sd=apply(df.test[,-1],2,sd))
+}
+
+final.data <- as.data.frame(do.call(rbind, Strain.list))
+rownames(final.data) <- NULL
+
+# Using the Wes Anderson pallette
+library(wesanderson)
+
+pd <- position_dodge(0)
+ggplot(final.data, aes(x=Time, y=mean, colour=Strain, group = Strain)) + 
+  geom_errorbar(aes(ymin=mean-sd, ymax=mean+sd), width=.1, position=pd) +
+  geom_point(position=pd) + geom_line(position = pd) +
+  xlab("Time (Hours)") + ylab("Mycelial growth (cm^2)") +
+  scale_color_manual(values = c(wes_palette("FantasticFox1"), wes_palette("Royal1"))) + 
+  theme_classic()
+```
+
+##Serratia Inhibits a Wide Arrary of Fungi
+1b - Serratia inhibit of fungal growth. Using Plate-ducken assay we determined various zygomycetes resistance to the volatiles produced by Serratia marcescens. 
+```{r}
+Zygos <- read_excel("Volatile.xlsx", sheet = "Sm Vs Zygos")
+
+library(reshape2)
+library(ggplot2)
+library(wesanderson)
+## Melt transforms a wide df into a long df
+Zygo.m <- melt(as.data.frame(Zygos), id.vars = "Species_Name")
+print(Zygos)
+colnames(Zygos) <- c("Strain", "Inhibition")
+plot=ggplot(Zygos, aes(Strain, Inhibition, fill=Strain)) + geom_col() + scale_fill_manual(values = c(wes_palette("FantasticFox1"), wes_palette("Royal1"), wes_palette("Royal2"), wes_palette("Moonrise1"), wes_palette("Moonrise2"), wes_palette("IsleofDogs1"))) + coord_flip() + theme(legend.position = "none")
+plot
+#pdf("Zygo_inhibiton.pdf",width=6,height=4) 
+  #plot
+#dev.off()
+
+
+```
+
+
+
+##Different Strains Inhibit Differently, potentially as a result of replication rate
+
+Fig. 1. We tested the ability of various environmental strains of Serratia: ADJS-2C_red, ADJS-2D_white, ADJS-2C_purple, ATCC 13880, and JES_110. 
+```{r}
+# Get Rhizopus data with many strains (48 Hour incubation)
+Rhizo <- read_excel("Volatile.xlsx", sheet = "Serratia Multistrain Analysis")
+Rhizo.bk <- Rhizo
+print(Rhizo)
+data.frame_Rhizo=as.data.frame(Rhizo)
+#print(data.frame_Rhizo)
+
+# Rhizopus name ordering
+names.data <- unique(Rhizo.bk$Strain)
+Rhizo$Strain <- factor(Rhizo$Strain, levels = names.data)
+#boxplot(c ~ Strain, Rhizo, las=2)
+
+bp = ggplot(Rhizo, aes(x=Strain, y="", fill=Strain)) + geom_bar(stat="identity") + ylab("Treatment")
+bp + coord_flip()
+
+
+## For loop to obtaim averages and stdv
+Strain.unique <- unique(Rhizo$Strain)
+Strain.list <- list()
+
+for (i in 1:length(Strain.unique)){
+  # Subset the data frame into each strain
+  df.test <- Rhizo[Rhizo$Strain %in% Strain.unique[i],]
+  # The second element of an apply means: 1 = Rows, 2 = Columns
+  # This means we are going to do the mean for all columns in the df
+  Strain.list[[i]] <- data.frame(Strain=Strain.unique[i], Time=c("0","24","48"), mean=apply(df.test[,-1],2,mean), sd=apply(df.test[,-1],2,sd))
+}
+
+final.data <- as.data.frame(do.call(rbind, Strain.list))
+rownames(final.data) <- NULL
+
+# Using the Wes Anderson pallette
+library(wesanderson)
+
+pd <- position_dodge(0)
+ggplot(final.data, aes(x=Time, y=mean, colour=Strain, group = Strain)) + 
+  geom_errorbar(aes(ymin=mean-sd, ymax=mean+sd), width=.1, position=pd) +
+  geom_point(position=pd) + geom_line(position = pd) +
+  xlab("Time (Hours)") + ylab("Mycelial growth (cm^2)") +
+  scale_color_manual(values = c(wes_palette("FantasticFox1"), wes_palette("Royal1"))) + 
+  theme_classic()
+```
+
+## Pure volatiles from *Serratia marcescens* affect Zygomycetous fungi growth
+Figure 1c - Pure volatile inhibition
+R. stolonifer cultures exposed to pure volatiles 2-undecanone and Dimethyl Disulfide exhibited growth retardation
+```{r}
+#Get pure volatile assay data
+Volatile <- read_excel("Volatile.xlsx", sheet = "Pure Volatiles Trial 2")
+Volatile.bk <- Volatile
+#print(Volatile)
+data.frame_volatile=as.data.frame(Volatile)
+#print(data.frame_volatile)
+
+# Pure Volatile, Ordering the names
+names.data <- unique(Volatile.bk$Inhibitor)
+Volatile$Inhibitor <- factor(Volatile.bk$Inhibitor, levels = names.data)
+boxplot(Size ~ Inhibitor, Volatile, las=2)
+bp = ggplot(Volatile, aes(x=Inhibitor, y=Size, fill=Inhibitor)) + geom_boxplot() 
+bp + coord_flip()
+
+```
+
+To test if volatiles could inhibit zygomycete growth we used 2-undecanone and dimethyl disulfide. Using 1000 R. stolonifer spores as initial inoculum, we added 2.5 µl of both 2-undecanone and dimethyl disulfide in serial dilutions. We found that blank was the EC50. Figure 2 - Inhibition assay.
+
+```{r}
+library("ggplot2")
+library("ggdendro")
+library("reshape2")
+library("grid")
+library(readxl)
+rm(list = ls())
+
+#import tables and combine
+
+#RSI is the number Kerry uses
+Over85 <- read_excel("/Volumes/GoogleDrive/My Drive/Lab/Serratia/GC MS With Mauck/Volatile.xlsx", sheet = "RSI_Over85")
+volatiles <- Over85
+#volatiles <- total
+volatiles.bk <- volatiles
+#head(volatiles)
+
+
+#RSI without unique individuals
+NUOver85 <- read_excel("/Volumes/GoogleDrive/My Drive/Lab/Serratia/GC MS With Mauck/Volatile.xlsx", sheet = "RSI_Over85_nounique")
+volatiles <- NUOver85
+#volatiles <- total
+volatiles.bk <- volatiles
+#head(volatiles)
+
+
+
+# Run clustering
+volatiles.matrix <- as.matrix(volatiles)
+#head(volatiles.matrix)
+rownames(volatiles.matrix) <- volatiles$Sample
+
+#table optional (doesn't consider amounts)
+volatiles.table <- dcast(volatiles, Sample ~ variable)
+rownames(volatiles.table) <- volatiles.table$Sample
+#volatiles.table
+#write.table(volatiles.table, "/Volumes/GoogleDrive/My Drive/Lab/Serratia/GC MS With Mauck/vol_table.txt", sep="\t")
+
+
+# Create dendro
+volatile.dendro <- as.dendrogram(hclust(d = dist(x = volatiles.table)))
+dendro.plot <- ggdendrogram(data = volatile.dendro, rotate = TRUE)
+
+# Preview the plot
+dendro.plot
+setwd("/Volumes/GoogleDrive/My Drive/Lab/Serratia/GC MS With Mauck/")
+pdf("over75_vol_dendro.pdf", height = 8, width = 16)
+dendro.plot
+dev.off()
+
+#make heatmap
+volatiles.matrix <- as.matrix(volatiles)
+volatiles.df <- as.data.frame(volatiles.matrix)
+head(volatiles.df)
+
+#volatiles.long <- melt(volatiles.df, id = c("Sample"))
+volatiles.long <- volatiles.df
+head(volatiles.long)
+
+volatiles.long$value <- as.numeric(as.character(volatiles.long$value))
+#write.table(volatiles.long, "/Volumes/GoogleDrive/My Drive/Lab/Serratia/GC MS With Mauck/vol_melt2.txt", sep="\t")
+
+volatiles.long
+heatmap.plot <- ggplot(data = volatiles.long, aes(x = Sample, y = variable)) +
+  geom_tile(aes(fill = value)) +
+  scale_fill_gradient(low = "blue", high = "red", na.value = "black") +  ylab("Compound") +
+  xlab("Bacteria strains tested") +
+  theme(axis.text.x = element_text(angle = 90, hjust = 1)) +
+  labs(fill = "Detected Amount (ng)")
+heatmap.plot
+heatmap.plot <- ggplot(data = volatiles.long, aes(x = Sample, y = variable)) +
+  geom_tile(aes(fill = value)) +
+  scale_color_gradient2(na.value = "black") +  ylab("Compound") +
+  xlab("Bacteria strains tested") +
+  theme(axis.text.x = element_text(angle = 90, hjust = 1)) +
+  labs(fill = "Detected Amount (ng)")
+heatmap.plot
+
+setwd("/Volumes/GoogleDrive/My Drive/Lab/Serratia/GC MS With Mauck/")
+pdf("RSI_over85_noUnique_vol_heat.pdf", height = 32, width = 12)
+heatmap.plot
+dev.off()
+
+#Order Branches
+branch.order <- order.dendrogram(volatile.dendro)
+
+volatiles.long$Sample <- factor(x = volatiles.long$Sample,
+                                levels = volatiles.long$Sample[branch.order], 
+                                ordered = TRUE)
+#make sorted heatmap
+heatmap.plot.sorted <- ggplot(data = volatiles.long, aes(x = Sample, y = variable)) +
+  geom_tile(aes(fill = value)) +
+  scale_fill_gradient(low = "white", high = "blue", na.value = "black") +  ylab("Compound") +
+  xlab("List of Strains") +
+  theme(axis.text.x = element_text(angle = 90, hjust = 1)) +
+  labs(fill = "Probabilty of Correct Identification")
+heatmap.plot.sorted
+
+# Save sorted heatmap
+setwd("/Volumes/GoogleDrive/My Drive/Lab/Serratia/GC MS With Mauck/")
+pdf("heatmap_dendro_sorted.pdf", height = 12, width = 6)
+heatmap.plot
+dev.off()
+
+
+#NMDS Plot
+install.packages("vegan")
+library(vegan)
+library(readxl)
+set.seed(2)
+community_matrix=matrix(
+  sample(1:100,300,replace=T),nrow=10,
+  dimnames=list(paste("community",1:10,sep=""),paste("sp",1:30,sep="")))
+community_matrix
+volatiles_names <- read_excel("/Volumes/GoogleDrive/My Drive/Manuscripts/Volatiles/data.xlsx", sheet = "Sheet3")
+volatiles <- read_excel("/Volumes/GoogleDrive/My Drive/Manuscripts/Volatiles/data.xlsx", sheet = "Sheet4")
+rownames(volatiles) <- volatiles_names$X__1
+volatiles
+volatiles.matrix=as.matrix(volatiles)
+volatiles.matrix
+test_NMDS=metaMDS(volatiles.matrix, k=2)
+example_NMDS=metaMDS(volatiles.matrix, # Our community-by-species matrix
+                     k=2) # The number of reduced dimensions
+stressplot(example_NMDS)
+plot(example_NMDS)
+treat=c(rep("Bacillus",9),rep("Red",8),rep("White",8))
+ordiplot(example_NMDS,type="n")
+ordihull(example_NMDS,groups=treat,draw="polygon",col="grey90",label=F)
+orditorp(example_NMDS,display="sites",col=c(rep("blue",9),rep("red",8),rep("black",8)),
+         air=0.01,cex=1.25)
+
+
+setwd("/Volumes/GoogleDrive/My Drive/Manuscripts/Volatiles/")
+pdf("NMDS.pdf", height = 12, width = 12)
+plot(example_NMDS)
+treat=c(rep("Bacillus",9),rep("Red",8),rep("White",8))
+ordiplot(example_NMDS,type="n")
+ordihull(example_NMDS,groups=treat,draw="polygon",col="grey90",label=F)
+orditorp(example_NMDS,display="sites",col=c(rep("blue",9),rep("red",8),rep("black",8)),
+         air=0.01,cex=1.25)
+dev.off()
+
+
+
+```
+
+
+
+#Conclusions:
+In conclusion we have shown that different environmental strains of Serratia can inhibit zygomycete growth, the variability in inhibition may be based on genetic differences as growth rate does not seem to affect inhibition by volatiles. We  would like to explore why some strains of zygo’s (e.g. Actinomucor elegans) grow so well under serratia’s volatiles.
+
+#Acknowledgements: 
+Hank for his insight and assistance in developing the plate-ducken
+
+#References:
+Aryal, Sudarshan K., Derreck Carter-House, Jason E. Stajich, and Adler R. Dillman. 2017. “Microbial Associates of the Southern Mole Cricket (Scapteriscus Borellii) Are Highly Pathogenic.” Journal of Invertebrate Pathology 150 (September):54–62.
+Kai, Marco, Elena Crespo, Simona M. Cristescu, Frans J. M. Harren, Wittko Francke, and Birgit Piechulla. 2010. “Serratia Odorifera: Analysis of Volatile Emission and Biological Impact of Volatile Compounds on Arabidopsis Thaliana.” Applied Microbiology and Biotechnology 88 (4):965–76.
+Kamensky, Merav, Marianna Ovadis, Ilan Chet, and Leonid Chernin. 2003. “Soil-Borne Strain IC14 of Serratia Plymuthica with Multiple Mechanisms of Antifungal Activity Provides Biocontrol of Botrytis Cinerea and Sclerotinia Sclerotiorum Diseases.” Soil Biology & Biochemistry 35 (2):323–31.
+Mahlen, Steven D. 2011. “Serratia Infections: From Military Experiments to Current Practice.” Clinical Microbiology Reviews 24 (4):755–91.
+Patterson, Kathryn L., James W. Porter, Kim B. Ritchie, Shawn W. Polson, Erich Mueller, Esther C. Peters, Deborah L. Santavy, and Garriet W. Smith. 2002. “The Etiology of White Pox, a Lethal Disease of the Caribbean Elkhorn Coral, Acropora Palmata.” Proceedings of the National Academy of Sciences of the United States of America 99 (13):8725–30.
+Plyuta, Vladimir, Valentina Lipasova, Alexandra Popova, Olga Koksharova, Alexander Kuznetsov, Erno Szegedi, Leonid Chernin, and Inessa Khmel. 2016. “Influence of Volatile Organic Compounds Emitted by Pseudomonas and Serratia Strains on Agrobacterium Tumefaciens Biofilms.” APMIS: Acta Pathologica, Microbiologica, et Immunologica Scandinavica 124 (7):586–94.
+Popova, Alexandra A., Olga A. Koksharova, Valentina A. Lipasova, Julia V. Zaitseva, Olga A. Katkova-Zhukotskaya, Svetlana Iu Eremina, Alexander S. Mironov, Leonid S. Chernin, and Inessa A. Khmel. 2014. “Inhibitory and Toxic Effects of Volatiles Emitted by Strains of Pseudomonas and Serratia on Growth and Survival of Selected Microorganisms, Caenorhabditis Elegans, and Drosophila Melanogaster.” BioMed Research International 2014 (June). Hindawi. https://doi.org/10.1155/2014/125704.
+Schmidt, Ruth, Victor de Jager, Daniela Zühlke, Christian Wolff, Jörg Bernhardt, Katarina Cankar, Jules Beekwilder, et al. 2017. “Fungal Volatile Compounds Induce Production of the Secondary Metabolite Sodorifen in Serratia Plymuthica PRI-2C.” Scientific Reports 7 (1):862.
+Weise, Teresa, Andrea Thürmer, Silja Brady, Marco Kai, Rolf Daniel, Gerhard Gottschalk, and Birgit Piechulla. 2014. “VOC Emission of Various Serratia Species and Isolates and Genome Analysis of Serratia Plymuthica 4Rx13.” FEMS Microbiology Letters 352 (1):45–53.
+Yu, K., T. R. Hamilton-Kemp, D. D. Archbold, R. W. Collins, and M. C. Newman. 2000. “Volatile Compounds from Escherichia Coli O157:H7 and Their Absorption by Strawberry Fruit.” Journal of Agricultural and Food Chemistry 48 (2):413–17.
+Zhang, Yuanchen, Erik K. Kastman, Jeffrey S. Guasto, and Benjamin E. Wolfe. 2018. “Fungal Networks Shape Dynamics of Bacterial Dispersal and Community Assembly in Cheese Rind Microbiomes.” Nature Communications 9 (1). Nature Publishing Group:336.
+
+
+
+
+
+
+
+
+
