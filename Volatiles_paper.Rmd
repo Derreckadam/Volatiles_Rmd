@@ -1,10 +1,28 @@
 ---
 title: "Zygomycetes and Serratia marcescens, A Stinky Microbial Bully"
 author: Derreck Carter\-House
+abstract: "This is my abstract."
 output:
-  pdf_document:
-    toc: true
+  pdf_document: 
+    keep_tex: yes
+    toc: yes
+    #latex_engine: xelatex
 ---
+```{r setup, include=FALSE, echo=FALSE}
+require("knitr")
+opts_knit$set(root.dir = "./")
+#install.packages(c("ggplot2", "reshape2", "wesanderson", "tidyverse", "readxl"))
+tinytex::install_tinytex()
+install.packages('tinytex')
+library(readxl)
+library(ggplot2)
+library(reshape2)
+library(gridExtra)
+library(VennDiagram)
+library(vegan)
+library(ggdendro)
+library(grid)
+```
 
 # Abstract:
 *Serratia marcescens* lives a lifestyle of diversity and ubiquity. Found nearly everywhere this bacteria is capable of living as a saprobe in soil and water, but also living in community with plants and other rhizobacteria, and in addition as a pathogen to plants, animals and other microbes. Besides being a beautiful example of life’s ability to adapt to survive, Serratia also provides insight to one interesting aspect of microbiology. How do bacteria and fungi communicate?  We have identified multiple strains of Serratia from unique niches and compared their ability to inhibit the growth of common soil inhabitants known to interact with plants, Mucoromycota. 
@@ -64,41 +82,40 @@ After establishing that fungal growth inhibitors reside in the volatile profiles
 	
 After identifying the volatiles produced by ADJS Red we ordered a few pure volatiles, with consideration for price, abundance in profile as based on GC MS, and variation of chemical structure. We tested 2-undecanone, Dimethyl Trisulfide, Anisole, Lepidine, 2,5-dimethylpyrazine. 2-undecanone was chosen due to that fact that it is a known antifungal, is used in food and fragrance, and is shown to be an effective insect repellent approved for use with humans. To test the volatiles we loaded the volatiles onto a piece of filter paper on a glass microscope slide on the side of a petri dish with vogel’s media, spores were inoculated approximately 2 cm away on the media with a layer of cellophane to prevent fungal spores from germinating and growing downwards into the media. The amount of pure volatiles tested was 10mg, about one magnitude of order greater than observed by GCMS. At this amount the differences between non functional volatiles and effective ones are exaggerated. The effective volatiles for preventing growth were 2-undecanone, Anisole, and Dimethyl Trisulfide, figure 3a. 
 
-POTENTIALLY FIGURE 1A - Serratia’s inhibition relies on a population density. So inhibition capacity increasing as days on plate increases. 
-## Different Strains Inhibit Differently, potentially as a result of replication rate
+Spent Media does not inhibit growth. (Diference in growth is due to difference in starting mycelial plug)
 
-Fig. 1. We tested the ability of various environmental strains of Serratia: ADJS-2C_red, ADJS-2D_white, ADJS-2C_purple, ATCC 13880, and JES_110. 
+```{r spent_media, include=FALSE}
+#Spent Media
 
-```{r pressure, echo=FALSE, fig.cap="A caption", out.width = '100%'}
-knitr::include_graphics("Kaiju\ Results/bubbles4.png")
+spent <- read_excel("Volatile.xlsx", sheet = "Spent_Media")
+pd=position_dodge(width=1)
+spent$Age <- as.character(spent$Age)
+
+spent.plot <- ggplot(spent, aes(x=spent$Age, y=spent$Diameter, fill=spent$Condition)) + geom_boxplot() + scale_x_discrete(name ="Age (Days)", limits=c("5","7","10"))+ ylab("Rhizopus Average Mycelium Diameter (cm)") + labs(fill="Condition")
+
+
 ```
 
+ 
+```{r inhibtion_over_days, include=FALSE}
+#Rhizopus data with on S. pro, S. mar, and B. subtilis
 
-```{r}
-# Update figure with S_pro_Exclusive, Serratia Multistrain Analysis, 
 # Get Rhizopus data with many strains (48 Hour incubation)
-Rhizo <- read_excel("Volatile.xlsx", sheet = "Serratia Multistrain Analysis")
-Rhizo.bk <- Rhizo
-print(Rhizo)
-data.frame_Rhizo=as.data.frame(Rhizo)
-#print(data.frame_Rhizo)
+timelap <- read_excel("Volatile.xlsx", sheet = "Serratia Multistrain Analysis")
 
 # Rhizopus name ordering
-names.data <- unique(Rhizo.bk$Strain)
-Rhizo$Strain <- factor(Rhizo$Strain, levels = names.data)
+names.data <- unique(timelap$Strain)
+timelap$Strain <- factor(timelap$Strain, levels = names.data)
 #boxplot(c ~ Strain, Rhizo, las=2)
-
-bp = ggplot(Rhizo, aes(x=Strain, y="", fill=Strain)) + geom_bar(stat="identity") + ylab("Treatment")
-bp + coord_flip()
 
 
 ## For loop to obtaim averages and stdv
-Strain.unique <- unique(Rhizo$Strain)
+Strain.unique <- unique(timelap$Strain)
 Strain.list <- list()
 
 for (i in 1:length(Strain.unique)){
   # Subset the data frame into each strain
-  df.test <- Rhizo[Rhizo$Strain %in% Strain.unique[i],]
+  df.test <- timelap[timelap$Strain %in% Strain.unique[i],]
   # The second element of an apply means: 1 = Rows, 2 = Columns
   # This means we are going to do the mean for all columns in the df
   Strain.list[[i]] <- data.frame(Strain=Strain.unique[i], Time=c("0","24","48"), mean=apply(df.test[,-1],2,mean), sd=apply(df.test[,-1],2,sd))
@@ -107,118 +124,47 @@ for (i in 1:length(Strain.unique)){
 final.data <- as.data.frame(do.call(rbind, Strain.list))
 rownames(final.data) <- NULL
 
-# Using the Wes Anderson pallette
-library(wesanderson)
-
-pd <- position_dodge(0)
-ggplot(final.data, aes(x=Time, y=mean, colour=Strain, group = Strain)) + 
-  geom_errorbar(aes(ymin=mean-sd, ymax=mean+sd), width=.1, position=pd) +
-  geom_point(position=pd) + geom_line(position = pd) +
-  xlab("Time (Hours)") + ylab("Mycelial growth (cm^2)") +
-  scale_color_manual(values = c(wes_palette("FantasticFox1"), wes_palette("Royal1"))) + 
-  theme_classic()
-```
-
-Figure 1a - Plate-ducken, top to bottom left to right, Rhizopus stolonifer with no bacteria, R. stolonifer covered with a lid with Serratia marcescens ADJS-2C Red, R. stolonifer exposed to volatiles of Serratia marcescens, R. stolonifer with known inhibitor E. coli.
-
-```{r setup, include=FALSE, echo=FALSE}
-require("knitr")
-opts_knit$set(root.dir = "/Users/derreck_carter-house/Google Drive File Stream/My Drive/Lab/Serratia/Volatiles_Rmd")
-#install.packages(c("ggplot2", "reshape2", "wesanderson", "tidyverse", "readxl"))
+pd <- position_dodge(1)
+timelap.bar <- ggplot(final.data, aes(x=Time, y=mean, fill=Strain, group = Strain)) + geom_bar(stat="identity", position=pd) + geom_errorbar(aes(ymin=mean-sd, ymax=mean+sd), width=.1, position=pd) + xlab("Time (Hours)") + ylab("Mycelial growth (cm^2)") + theme_classic()
 
 ```
 
-```{r pressure, echo=FALSE, fig.cap="A caption", out.width = '100%'}
+```{r timelap.bar, fig.cap="Fig. 1. We tested the ability of various strains of bacteria to inhibit fungal growth at 0, 24, and 48 hours"}
+timelap.bar
+```
+
+
+
+```{r echo=FALSE, fig.cap="Figure 1a - Plate-ducken, top to bottom left to right, Rhizopus stolonifer with no bacteria, R. stolonifer covered with a lid with Serratia marcescens ADJS-2C Red, R. stolonifer exposed to volatiles of Serratia marcescens, R. stolonifer with known inhibitor E. coli.", out.width = '100%'}
 knitr::include_graphics("Donut.png")
 ```
 
-```{r}
 
-#Rhizopus data with on S. pro, S. mar, and B. subtilis
-
-library(readxl)
-Rhizo <- read_excel("Volatile.xlsx", sheet = "Serratia Multistrain Analysis")
-Rhizo.bk <- Rhizo
-#print(Rhizo)
-
-# Transform the table for ggplot2
-library(reshape2)
-## Melt transforms a wide df into a long df
-Rhizo.m <- melt(as.data.frame(Rhizo), id.vars = "Strain")
-colnames(Rhizo.m) <- c("Strain","Time","Growth")
-## For loop to obtaim averages and stdv
-Strain.unique <- unique(Rhizo$Strain)
-Strain.list <- list()
-
-for (i in 1:length(Strain.unique)){
-  # Subset the data frame into each strain
-  df.test <- Rhizo[Rhizo$Strain %in% Strain.unique[i],]
-  # The second element of an apply means: 1 = Rows, 2 = Columns
-  # This means we are going to do the mean for all columns in the df
-  Strain.list[[i]] <- data.frame(Strain=Strain.unique[i], Time=c("0","24","48"), mean=apply(df.test[,-1],2,mean), sd=apply(df.test[,-1],2,sd))
-}
-
-final.data <- as.data.frame(do.call(rbind, Strain.list))
-rownames(final.data) <- NULL
-
-
-# Using the Wes Anderson pallette
-library(wesanderson)
-Rhizo.m
-ggplot(Rhizo.m, aes(x=Strain, y=Growth, fill=Time)) +
-  geom_boxplot(position=position_dodge(0)) +
-  xlab("Time (Hours)") + ylab("Mycelial growth (cm^2)") + theme(axis.text.x = element_text(angle = 90, hjust = 1))
-```
 
 ## Serratia Inhibits a Wide Arrary of Fungi
-1b - Serratia inhibit of fungal growth. Using Plate-ducken assay we determined various zygomycetes resistance to the volatiles produced by Serratia marcescens. 
+1b - Serratia inhibition of fungal growth. Using Plate-ducken assay we determined various zygomycetes resistance to the volatiles produced by Serratia marcescens. 
 
 
-```{r}
+```{r, include=FALSE}
 
-#Use donut and this data to generate figure with error bars
+#suplimental not necessary
 
-Zygos <- read_excel("Volatile.xlsx", sheet = "Sm Vs Zygos")
-
-library(reshape2)
-library(ggplot2)
-library(wesanderson)
-## Melt transforms a wide df into a long df
-Zygo.m <- melt(as.data.frame(Zygos), id = "Species_Name")
-print(Zygos)
-colnames(Zygos) <- c("Strain", "Inhibition")
-plot=ggplot(Zygos, aes(Strain, Inhibition, fill=Strain)) + geom_col() + scale_fill_manual(values = c(wes_palette("FantasticFox1"), wes_palette("Royal1"), wes_palette("Royal2"), wes_palette("Moonrise1"), wes_palette("Moonrise2"), wes_palette("IsleofDogs1"))) + coord_flip() + theme(legend.position = "none")
-plot
-#pdf("Zygo_inhibiton.pdf",width=6,height=4) 
-  #plot
-#dev.off()
+Zygos <- read_excel("Volatile.xlsx", sheet = "Spent_Media")
 
 
 ```
 
-```{r}
+```{r include=FALSE}
 #Pathogens Inhbition
 #Fungal data with S. pro, S. mar, and B. subtilis
-library(readxl)
-library(reshape2)
-library(ggplot2)
-#install.packages("gridExtra")
-library(gridExtra)
-Actino <- read_excel("data.xlsx", sheet = "Actino")
-Conidi <- read_excel("data.xlsx", sheet = "Conidi")
-Basidi<- read_excel("data.xlsx", sheet = "Basidi")
-Mucor<- read_excel("data.xlsx", sheet = "Mucor")
-Alt<- read_excel("data.xlsx", sheet = "Alt")
-Rhizo<- read_excel("data.xlsx", sheet = "Rhizo")
-Ncra<- read_excel("data.xlsx", sheet = "Ncrassa_donut")
 
-patho <- Actino
-patho <- Conidi
-patho <- Basidi
-patho <- Mucor
-patho <- Alt
-patho <- Rhizo
-patho <- Ncra
+Actino <- read_excel("Volatile.xlsx", sheet = "Actino")
+Conidi <- read_excel("Volatile.xlsx", sheet = "Conidi")
+Basidi<- read_excel("Volatile.xlsx", sheet = "Basidi")
+Mucor<- read_excel("Volatile.xlsx", sheet = "Mucor")
+Alt<- read_excel("Volatile.xlsx", sheet = "Alt")
+Rhizo<- read_excel("Volatile.xlsx", sheet = "Rhizo")
+# Ncra<- read_excel("Volatile.xlsx", sheet = "Ncrassa_donut")
 
 
 #+++++++++++++++++++++++++
@@ -250,7 +196,7 @@ colnames(patho.m) <- c("Strain","Time","Growth")
 
 dfm <- data_summary(patho.m, varname="Growth", 
                     groupnames=c("Strain", "Time"))
-a <- ggplot(dfm, aes(x=Time, y=Growth, group=Strain, color=Strain)) + 
+actino.plot <- ggplot(dfm, aes(x=Time, y=Growth, group=Strain, color=Strain)) + 
   geom_errorbar(aes(ymin=Growth-sd, ymax=Growth+sd), width=.1) +
     geom_line() + geom_point()+
    scale_color_brewer(palette="Paired")+theme_minimal() + ggtitle("Actinomucor")
@@ -262,7 +208,7 @@ colnames(patho.m) <- c("Strain","Time","Growth")
 
 dfm <- data_summary(patho.m, varname="Growth", 
                     groupnames=c("Strain", "Time"))
-b <- ggplot(dfm, aes(x=Time, y=Growth, group=Strain, color=Strain)) + 
+conidio.plot <- ggplot(dfm, aes(x=Time, y=Growth, group=Strain, color=Strain)) + 
     geom_errorbar(aes(ymin=Growth-sd, ymax=Growth+sd), width=.1) +
     geom_line() + geom_point()+
    scale_color_brewer(palette="Paired")+theme_minimal()+ theme(legend.position = "none")+ ggtitle("Conidiobolus")
@@ -274,7 +220,7 @@ colnames(patho.m) <- c("Strain","Time","Growth")
 
 dfm <- data_summary(patho.m, varname="Growth", 
                     groupnames=c("Strain", "Time"))
-c <- ggplot(dfm, aes(x=Time, y=Growth, group=Strain, color=Strain)) + 
+basidio.plot <- ggplot(dfm, aes(x=Time, y=Growth, group=Strain, color=Strain)) + 
     geom_errorbar(aes(ymin=Growth-sd, ymax=Growth+sd), width=.1) +
     geom_line() + geom_point()+
    scale_color_brewer(palette="Paired")+theme_minimal()+ theme(legend.position = "none")+ ggtitle("Basidiobolus")
@@ -286,7 +232,7 @@ colnames(patho.m) <- c("Strain","Time","Growth")
 
 dfm <- data_summary(patho.m, varname="Growth", 
                     groupnames=c("Strain", "Time"))
-d <- ggplot(dfm, aes(x=Time, y=Growth, group=Strain, color=Strain)) + 
+mucor.plot <- ggplot(dfm, aes(x=Time, y=Growth, group=Strain, color=Strain)) + 
     geom_errorbar(aes(ymin=Growth-sd, ymax=Growth+sd), width=.1) +
     geom_line() + geom_point()+
    scale_color_brewer(palette="Paired")+theme_minimal()+ theme(legend.position = "none")+ ggtitle("Mucor")
@@ -298,7 +244,7 @@ colnames(patho.m) <- c("Strain","Time","Growth")
 
 dfm <- data_summary(patho.m, varname="Growth", 
                     groupnames=c("Strain", "Time"))
-e <- ggplot(dfm, aes(x=Time, y=Growth, group=Strain, color=Strain)) + 
+alternaria.plot <- ggplot(dfm, aes(x=Time, y=Growth, group=Strain, color=Strain)) + 
     geom_errorbar(aes(ymin=Growth-sd, ymax=Growth+sd), width=.1) +
     geom_line() + geom_point()+
    scale_color_brewer(palette="Paired")+theme_minimal()+ theme(legend.position = "none")+ ggtitle("Alternaria")
@@ -309,7 +255,7 @@ colnames(patho.m) <- c("Strain","Time","Growth")
 
 dfm <- data_summary(patho.m, varname="Growth", 
                     groupnames=c("Strain", "Time"))
-f <- ggplot(dfm, aes(x=Time, y=Growth, group=Strain, color=Strain)) + 
+rhizo.plot <- ggplot(dfm, aes(x=Time, y=Growth, group=Strain, color=Strain)) + 
     geom_errorbar(aes(ymin=Growth-sd, ymax=Growth+sd), width=.1) +
     geom_line() + geom_point()+
    scale_color_brewer(palette="Paired") + theme_minimal() + theme(legend.position = "none")+ ggtitle("Rhizo")
@@ -320,21 +266,22 @@ colnames(patho.m) <- c("Strain","Time","Growth")
 
 dfm <- data_summary(patho.m, varname="Growth", 
                     groupnames=c("Strain", "Time"))
-g <- ggplot(dfm, aes(x=Time, y=Growth, group=Strain, color=Strain)) + 
+ncrassa.plot <- ggplot(dfm, aes(x=Time, y=Growth, group=Strain, color=Strain)) + 
     geom_errorbar(aes(ymin=Growth-sd, ymax=Growth+sd), width=.1) +
     geom_line() + geom_point()+
    scale_color_brewer(palette="Paired")+theme_minimal()+ ggtitle("Neurospora Growth with Bacterial Volatiles")
 
-a
-b
-c
-d
-e
-f
-g
+```
 
-grid.arrange(b, c, d, e, f, a, nrow = 3, ncol=3,layout_matrix = rbind(c(2, 1, 3), c(5, 6, 6), c(5, 4, NA)))
 
+```{r, fig.cap="Pathogenic fungi and their growth inhibtion with bacterial volatiles"}
+actino.plot
+basidio.plot
+conidio.plot
+mucor.plot
+rhizo.plot
+alternaria.plot
+ncrassa.plot
 
 
 ```
@@ -344,50 +291,42 @@ grid.arrange(b, c, d, e, f, a, nrow = 3, ncol=3,layout_matrix = rbind(c(2, 1, 3)
 
 First a look at the samples and their production of volatiles as detected though GC MS
 
-```{r}
-library("readxl")
-library("ggplot2")
+```{r include=FALSE}
 
-Samples <- read_excel("data.xlsx", sheet = "Heatmap1_total_production")
+Samples <- read_excel("GC_data.xlsx", sheet = "Heatmap1_total_production")
 Samples.df <- as.data.frame(Samples)
-rownames(Samples.df) <- Samples$`Sum of amount ng/sample`
+rownames(Samples.df) <- Samples$`Sample`
 
-Samples.df
-Totes <- ggplot(Samples.df, aes(x=Samples.df$`Sum of amount ng/sample`, y=Samples.df$'Grand Total', fill=Samples.df$`Sum of amount ng/sample`)) + geom_bar(stat="identity") + guides(fill=FALSE) + theme(axis.text.x = element_text(angle = 90, hjust = 1)) + ylab("ng of Volatiles") + xlab("Sample")
-Totes
-pdf("AllSample_vol_production", height = 32, width = 12)
-Totes
-dev.off()
+vol_total <- ggplot(Samples.df, aes(x=Samples.df$`Sample`, y=Samples.df$'Grand Total', fill=Samples.df$`Grand Total`)) + geom_bar(stat="identity") + guides(fill=FALSE) + theme(axis.text.x = element_text(angle = 90, hjust = 1)) + ylab("ng of Volatiles") + xlab("Sample") + scale_fill_gradient(low="red", high="green")
+
+```
 
 
+```{r volatiles_total, fig.cap="Total Volatile detect from each sample"}
+vol_total
 
 ```
 
 Examing the overlap between strains
-``` {r}
+``` {r include=FALSE}
 
 #make venn diagram of volatiles
-library(readxl)
+#Numbers are coming from "GC_data.xlsx", sheet = "VennDia3")
 library(VennDiagram)
-#Numbers are coming from "data.xlsx", sheet = "VennDia3")
-
 grid.newpage()
 Venn <- draw.triple.venn(area1 = 101, area2 = 124, area3 = 115, n12 = 51, n23 = 81, n13 = 55, n123 = 47, category = c("B. subtilis", "S. marcescens", "S. proteamaculans"), lty = rep("solid", 3), fill = c("lightblue3", "indianred3", "lightgoldenrod3"))
-
-Venn
-pdf("Venn_vol_heat.pdf", height = 32, width = 12)
-Venn
-dev.off()
 
 
 ```
 
-Show how they seperate out with several analyses
-```{r}
-#NMDS Plot
+```{r fig.cap="Over lap of produced volatiles by bacteria"}
+grid.newpage()
+Venn <- draw.triple.venn(area1 = 101, area2 = 124, area3 = 115, n12 = 51, n23 = 81, n13 = 55, n123 = 47, category = c("B. subtilis", "S. marcescens", "S. proteamaculans"), lty = rep("solid", 3), fill = c("lightblue3", "indianred3", "lightgoldenrod3"))
+```
 
-library(vegan)
-library(readxl)
+Show how they seperate out with several analyses
+```{r include=FALSE}
+#NMDS Plot
 set.seed(2)
 community_matrix=matrix(
   sample(1:100,300,replace=T),nrow=10,
@@ -396,8 +335,8 @@ community_matrix=matrix(
 example_NMDS=metaMDS(community_matrix, # Our community-by-species matrix
                      k=2) # The number of reduced dimensions
 
-volatiles <- read_excel("data.xlsx", sheet = "NMDS_1")
-volatiles_names <- read_excel("data.xlsx", sheet = "NMDS_2")
+volatiles <- read_excel("GC_data.xlsx", sheet = "NMDS_1")
+volatiles_names <- read_excel("GC_data.xlsx", sheet = "NMDS_2")
 
 rownames(volatiles) <- volatiles_names$Sample
 
@@ -409,126 +348,123 @@ plot(NMDS)
 treat=c(rep("Bacillus",9),rep("Red",8),rep("White",8))
 ordiplot(NMDS,type="n")
 ordihull(NMDS,groups=treat,draw="polygon",col="grey90",label=F)
-orditorp(NMDS,display="sites",col=c(rep("blue",9),rep("red",8),rep("black",8)),
-         air=0.01,cex=1.25)
+orditorp(NMDS,display="sites",col=c(rep("blue",9),rep("red",8),rep("black",8)),air=0.01,cex=1.25)
 
+``` 
 
-pdf("NMDS.pdf", height = 12, width = 12)
+```{r fig.cap=""}
 plot(NMDS)
 treat=c(rep("Bacillus",9),rep("Red",8),rep("White",8))
 ordiplot(NMDS,type="n")
 ordihull(NMDS,groups=treat,draw="polygon",col="grey90",label=F)
 orditorp(NMDS,display="sites",col=c(rep("blue",9),rep("red",8),rep("black",8)),
          air=0.01,cex=1.25)
-dev.off()
 
-``` 
+```
 
 
-```{r}
-library("readxl")
-library("ggplot2")
-library("ggdendro")
-library("reshape2")
-library("grid")
+```{r include=FALSE}
 
 #Grab and shape data
-vol <- read_excel("data.xlsx", sheet = "Heatmap_4_average")
+vol <- read_excel("GC_data.xlsx", sheet = "Heatmap_4_average")
 vol.df <- as.data.frame(vol)
-vol.df
 rownames(vol.df) <- vol$Volatile
-vol.df
 
 #Cluster
 vol.df <- vol.df[,2:4]
 vol.m <- as.matrix(vol.df)
 vol.dendro <- as.dendrogram(hclust(d = dist(x=vol.m)))
-dendro.plot <- ggdendrogram(data=vol.dendro, rotate = TRUE)
-dendro.plot
-
-pdf("RSI_over85_average_vol_dendro.pdf")
-dendro.plot
-dev.off()
+dendro.plot.RSI85.Average <- ggdendrogram(data=vol.dendro, rotate = TRUE)
+dendro.plot.RSI85.Average
 
 #Heatmap
 vol.long <- melt(vol.m)
-vol.long
-vol.heatmap <- ggplot(data = vol.long, mapping = aes(x = Var2, y = Var1, fill = value)) +
+vol.heatmap.RSI85.average <- ggplot(data = vol.long, mapping = aes(x = Var2, y = Var1, fill = value)) +
   geom_tile() + xlab(label = "Bacteria") +  ylab("Compound") +
   labs(fill = "Detected Amount (ng)") + theme(axis.text.x = element_text(angle = 90, hjust = 1))
 
-vol.heatmap
-
-pdf("RSI_over85_average_vol_heat.pdf", height = 32, width = 12)
-vol.heatmap
-dev.off()
+vol.heatmap.RSI85.average 
 
 #HIGH Heat
 
 #Grab and shape data
-vol <- read_excel("data.xlsx", sheet = "Heatmap_4_high")
+vol <- read_excel("GC_data.xlsx", sheet = "Heatmap_4_high")
 vol.df <- as.data.frame(vol)
-vol.df
+
 rownames(vol.df) <- vol$Volatile
-vol.df
+
 
 #Cluster
 vol.df <- vol.df[,2:4]
 vol.m <- as.matrix(vol.df)
 vol.dendro <- as.dendrogram(hclust(d = dist(x=vol.m)))
-dendro.plot <- ggdendrogram(data=vol.dendro, rotate = TRUE)
-dendro.plot
+dendro.plot.RSI85.High <- ggdendrogram(data=vol.dendro, rotate = TRUE)
+dendro.plot.RSI85.High
 
-pdf("RSI_over85_high_vol_dendro.pdf")
-dendro.plot
-dev.off()
 
 #Heatmap
 vol.long <- melt(vol.m)
-vol.long
-vol.heatmap <- ggplot(data = vol.long, mapping = aes(x = Var2, y = Var1, fill = value)) +
+vol.heatmap.RSI85.High <- ggplot(data = vol.long, mapping = aes(x = Var2, y = Var1, fill = value)) +
   geom_tile() + xlab(label = "Bacteria") +  ylab("Compound") +
   labs(fill = "Detected Amount (ng)")
 
-vol.heatmap
+vol.heatmap.RSI85.High
 
-pdf("RSI_over85_high_vol_heat.pdf", height = 12, width = 10)
-vol.heatmap
-dev.off()
+```
 
-````
+```{r fig.caption="lots of heatmaps"}
+dendro.plot.RSI85.Average
+
+vol.heatmap.RSI85.average
+
+dendro.plot.RSI85.High
+
+vol.heatmap.RSI85.High
+```
+
+
 
 
 ## Pure volatiles from *Serratia marcescens* affect Zygomycetous fungi growth
+
 ```{r}
 # Pure volatile inhibition
 #Get pure volatile assay data
-Volatile <- read_excel("Volatile.xlsx", sheet = "Pure Volatiles Trial 2")
-Volatile.bk <- Volatile
-#print(Volatile)
-data.frame_volatile=as.data.frame(Volatile)
-#print(data.frame_volatile)
 
-# Pure Volatile, Ordering the names
-names.data <- unique(Volatile.bk$Inhibitor)
-Volatile$Inhibitor <- factor(Volatile.bk$Inhibitor, levels = names.data)
-boxplot(Size ~ Inhibitor, Volatile, las=2)
-bp = ggplot(Volatile, aes(x=Inhibitor, y=Size, fill=Inhibitor)) + geom_boxplot() 
-bp + coord_flip()
+abund <- read_excel("Volatile.xlsx", sheet = "Abundant_VOC_RS_24")
+abund.m <- melt(as.data.frame(abund), id.vars = "Compound")
+abund.m$Compound <- factor(abund.m$Compound, levels = c("Dimethyl trisulfide","Anisole", "2-Undecanone", "2,5-Dimethylpyrazine",  "Lepidine", "5-Methyl-2-furylmethanol","Tropone","Blank"))
+
+abund.plot = ggplot(abund.m, aes(x=Compound, y=abund.m$value, fill=Compound)) + geom_boxplot() + ylab("Diameter of mycelium (cm)") + coord_flip() +  guides(fill=FALSE)
 
 ```
+
+```{r fig.cap="Effect of the most abundance VOCs produced by bacteria on Rhizopus growth after 24 hours"}
+abund.plot 
+```
+
+```{r include=FALSE}
+#Not Necessary to show dilutions with out EC50
+dil <- read_excel("Volatile.xlsx", sheet = "Dil_VOC_RS_24", range="A1:B36")
+
+
+dil.m <- melt(as.data.frame(dil), id.vars = "Compound")
+
+dil.plot = ggplot(dil.m, aes(x=Compound, y=dil.m$value, fill=Compound)) + geom_boxplot() + coord_flip()
+
+dil.plot
+
+```
+
+
+
 Figure 1c - Pure volatile inhibition
 R. stolonifer cultures exposed to pure volatiles 2-undecanone and Dimethyl Disulfide exhibited growth retardation
 
 To test if volatiles could inhibit zygomycete growth we used 2-undecanone and dimethyl disulfide. Using 1000 R. stolonifer spores as initial inoculum, we added 2.5 µl of both 2-undecanone and dimethyl disulfide in serial dilutions. We found that blank was the EC50. Figure 2 - Inhibition assay.
 
-```{r}
-library("ggplot2")
-library("ggdendro")
-library("reshape2")
-library("grid")
-library("readxl")
-rm(list = ls())
+```{r include=FALSE}
+
 
 #import tables and combine
 
@@ -617,44 +553,19 @@ dev.off()
 
 ```
 
-```{r}
-#NMDS Plot
-#install.packages("vegan")
-library(vegan)
-library(readxl)
-
-volatiles_names <- read_excel("data.xlsx", sheet = "Sheet3")
-volatiles <- read_excel("/data.xlsx", sheet = "Sheet4")
-rownames(volatiles) <- volatiles_names$X__1
-volatiles
-volatiles.matrix=as.matrix(volatiles)
-volatiles.matrix
-test_NMDS=metaMDS(volatiles.matrix, k=2)
-example_NMDS=metaMDS(volatiles.matrix, # Our community-by-species matrix
-                     k=2) # The number of reduced dimensions
-stressplot(example_NMDS)
-plot(example_NMDS)
-treat=c(rep("Bacillus",9),rep("Red",8),rep("White",8))
-ordiplot(example_NMDS,type="n")
-ordihull(example_NMDS,groups=treat,draw="polygon",col="grey90",label=F)
-orditorp(example_NMDS,display="sites",col=c(rep("blue",9),rep("red",8),rep("black",8)),
-         air=0.01,cex=1.25)
-
-
-pdf("NMDS.pdf", height = 12, width = 12)
-plot(example_NMDS)
-treat=c(rep("Bacillus",9),rep("Red",8),rep("White",8))
-ordiplot(example_NMDS,type="n")
-ordihull(example_NMDS,groups=treat,draw="polygon",col="grey90",label=F)
-orditorp(example_NMDS,display="sites",col=c(rep("blue",9),rep("red",8),rep("black",8)),
-         air=0.01,cex=1.25)
+```{r pdf_maker, include=FALSE}
+pdf("./Volatiles_figures.pdf")
+knitr::include_graphics("Donut.png")
+timelap.bar
+grid.arrange(basidio.plot, conidio.plot, mucor.plot, alternaria.plot, ncrassa.plot, rhizo.plot, nrow = 3, ncol=3,layout_matrix = rbind(c(2, 1, 3), c(5, 6, 6), c(5, 4, NA)))
+vol_total
+dendro.plot.RSI85.Average
+vol.heatmap.RSI85.average
+dendro.plot.RSI85.High
+vol.heatmap.RSI85.High
+abund.plot 
 dev.off()
-
-
-
 ```
-
-
 
 # Conclusions:
 In conclusion we have shown that different environmental strains of Serratia can inhibit zygomycete growth, the variability in inhibition may be based on genetic differences as growth rate does not seem to affect inhibition by volatiles. We  would like to explore why some strains of zygo’s (e.g. Actinomucor elegans) grow so well under serratia’s volatiles.
