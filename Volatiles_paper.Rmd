@@ -6,14 +6,16 @@ output:
   pdf_document: 
     keep_tex: yes
     toc: yes
-    #latex_engine: xelatex
+    latex_engine: xelatex
 ---
+
+
 ```{r setup, include=FALSE, echo=FALSE}
 require("knitr")
 opts_knit$set(root.dir = "./")
 #install.packages(c("ggplot2", "reshape2", "wesanderson", "tidyverse", "readxl"))
-tinytex::install_tinytex()
-install.packages('tinytex')
+#tinytex::install_tinytex()
+#install.packages('tinytex')
 library(readxl)
 library(ggplot2)
 library(reshape2)
@@ -23,6 +25,7 @@ library(vegan)
 library(ggdendro)
 library(grid)
 ```
+\newpage
 
 # Abstract:
 *Serratia marcescens* lives a lifestyle of diversity and ubiquity. Found nearly everywhere this bacteria is capable of living as a saprobe in soil and water, but also living in community with plants and other rhizobacteria, and in addition as a pathogen to plants, animals and other microbes. Besides being a beautiful example of life’s ability to adapt to survive, Serratia also provides insight to one interesting aspect of microbiology. How do bacteria and fungi communicate?  We have identified multiple strains of Serratia from unique niches and compared their ability to inhibit the growth of common soil inhabitants known to interact with plants, Mucoromycota. 
@@ -87,11 +90,11 @@ Spent Media does not inhibit growth. (Diference in growth is due to difference i
 ```{r spent_media, include=FALSE}
 #Spent Media
 
-spent <- read_excel("Volatile.xlsx", sheet = "Spent_Media")
-pd=position_dodge(width=1)
-spent$Age <- as.character(spent$Age)
+#spent <- read_excel("Volatile.xlsx", sheet = "Spent_Media")
+#pd=position_dodge(width=1)
+#spent$Age <- as.character(spent$Age)
 
-spent.plot <- ggplot(spent, aes(x=spent$Age, y=spent$Diameter, fill=spent$Condition)) + geom_boxplot() + scale_x_discrete(name ="Age (Days)", limits=c("5","7","10"))+ ylab("Rhizopus Average Mycelium Diameter (cm)") + labs(fill="Condition")
+#spent.plot <- ggplot(spent, aes(x=spent$Age, y=spent$Diameter, fill=spent$Condition)) + geom_boxplot() + scale_x_discrete(name ="Age (Days)", limits=c("5","7","10"))+ ylab("Rhizopus Average Mycelium Diameter (cm)") + labs(fill="Condition")
 
 
 ```
@@ -158,13 +161,13 @@ Zygos <- read_excel("Volatile.xlsx", sheet = "Spent_Media")
 #Pathogens Inhbition
 #Fungal data with S. pro, S. mar, and B. subtilis
 
-Actino <- read_excel("Volatile.xlsx", sheet = "Actino")
+Actino <- read_excel("Volatile.xlsx", sheet= "Actino")
 Conidi <- read_excel("Volatile.xlsx", sheet = "Conidi")
 Basidi<- read_excel("Volatile.xlsx", sheet = "Basidi")
 Mucor<- read_excel("Volatile.xlsx", sheet = "Mucor")
 Alt<- read_excel("Volatile.xlsx", sheet = "Alt")
 Rhizo<- read_excel("Volatile.xlsx", sheet = "Rhizo")
-# Ncra<- read_excel("Volatile.xlsx", sheet = "Ncrassa_donut")
+Ncra<- read_excel("Volatile.xlsx", sheet = "Ncrassa_donut")
 
 
 #+++++++++++++++++++++++++
