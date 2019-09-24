@@ -1,6 +1,6 @@
 ---
-title: "Zygomycetes and Serratia marcescens, A Stinky Microbial Bully"
-author: Derreck Carter\-House
+title: "Serratia- and Bacillus-produced Volatiles and their fungistatic properties on Rhizopus stolonifer"
+author: Derreck Carter\-House, Ian Wright, Josh Chen, Kerry Mauck, Jason Stajich
 abstract: "*Serratia marcescens* lives a lifestyle of diversity and ubiquity. Found nearly everywhere this bacteria is capable of living as a saprobe in soil and water, but also living in community with plants and other rhizobacteria, and in addition as a pathogen to plants, animals and other microbes. Besides being a beautiful example of life’s ability to adapt to survive, Serratia also provides insight to one interesting aspect of microbiology. How do bacteria and fungi communicate?  We have identified multiple strains of Serratia from unique niches and compared their ability to inhibit the growth of common soil inhabitants known to interact with plants, Mucoromycota."
 output:
   pdf_document: 
@@ -65,11 +65,11 @@ Microscopy: 1000 spores from Rstol were plated onto 8 mL MEYE media with agar [6
 
 #Results: 
 
-We noticed that when Serratia marcescens (strain ADJS-2C_Red) streaked on the plate across from fungi, fungal growth was repressed. The growth area could quantitatively be assessed, based on growth with bacteria streaked on either side compared to growth with no bacteria (Figure 1a). However, this method is not ideal for studying volatiles because it allowed for bacterial metabolites or proteins to diffuse through the media, potentially coming in direct contact with the fungal hyphae. Additionally, the bacteria are mobile and could possibly induce a response by direct contact with the fungal hyphae. The “donut” assay  was developed to limit diffusion of bacterial products in the media to fungal hyphae (Figure 1b). This set-up allows for the exchange of gases between the fungi and bacteria, but prevents direct contact and allows for two types of media to be poured (one tailored to the bacteria and the other tailored to the fungi). This is useful for the use of antibiotics in the fungal media or fungi with special growth needs.  We tested the ability of various strains of bacteria and the amount of time they needed to be present on the media before the Rstol were introduced (Figure 2). We tested for this inhibition across many fungi from various phylogenetic clades such as Basidiobolus, Mucor, Rhizopus, Alternaria, and Neurospora. For all strains the exchange of gases was enough to inhibit fungal growth after two days of bacteria growth. LB media was used to grow bacteria and was left uninoculated in the control experiments. The fungal spores/conidia were introduced onto the center plate after 48 hours of bacteria growth. The plates were measured after 24 and 48 hours, (Figure 3). The results show that Spro followed by Smar then Bsub had the highest inhibition of fungal growth. Spro inhibition of Ncrassa and Rhizopus Smar had an average growth being 1.5 cm at 24 hours and 4 cm at 48 hours. Bsub was a weaker inhibitor of growth with the average growth of the fungi being 2.8 and 5.2 cm at 24 and 48 hours, respectively. Control growth of Rstol with no bacteria inoculated on the LB outer ring was 3.7 cm at 24 hours and had grown to the diameter of the plate (5.7 cm) at 48 hours. 
-After establishing that fungal growth inhibitors reside in the volatiles of bacteria we used Gas Chromatography coupled with Mass Spectrometry to identify the compounds produced by our strains of bacteria. Based on previous literature we assumed that we would find 2-undecanone and dimethyl disulfide (Popova et al. 2014). On average there were about 50 volatiles produced by each strain. Strains with less than 500ng detected were thrown out. The volatiles identified are listed in supplemental table 1. To analyze the volatile, we restricted the results to only the volatiles with a confident prediction (RSI) of over 85%, and volatiles found in more than half of the sample’s replicates (Heatmap_average). Using an internal standard amounts of volatiles were predicted, this left us with an approximate abundance of compounds. Smar, Spro, and Bsub strain had different volatiles as well as different amounts produced. The top quartile of production had 13 compounds produced by two out of three of the species, only Anisole and 2-methoxyphenol were produced by Smar soley. (heatmap high)
-To further analyze the data we used MetaboAnalyst [70,71], an R package for metabolite profiles. Comparisons were made between all three samples, Bsub, Smar and Spro to see if each species could be differentiated by volatile profiles. Auto-scaling centered around the volatile production average was used to make all metabolites comparable (heatmap_3_600). Principal Component Axis (PCA) analyzed the variance between each of the replicates (PCA figure). Non-multiple dimensional analysis clearly showed differences between the strains especially between Serratia and Bacillus ANOVA analysis with a p-value cut off .05 and Tukey’s/HSD analysis reveals eleven significantly produce volatiles compounds (Figure ANOVA, show eleven figures). After 5000 trees Spro and Smar were unable to be predicted based on their profiles (Figure Rf).  
-	The analysis identified volatiles produced by Smar, Spro, and Bsub. We tested 2-undecanone, Dimethyl Trisulfide, Anisole, Lepidine, 2,5-dimethylpyrazine as they were some of the highest produced volatiles from the bacteria. 2-undecanone was chosen because it is a known antifungal [72], is used in food and fragrance, as well as an effective insect repellent approved for use with humans [64,73]. Dimethyl Trisulfide was tested based on the abundance in the Spro profile and sulfur content. Anisole was solely produced by Smar in high amounts. To test the volatiles we loaded the compounds onto a piece of filter paper on a glass microscope slide on the side of a petri dish with media, spores/conidia were inoculated approximately 2 cm away on the media. The effective volatiles for preventing growth were 2-undecanone, Anisole, and Dimethyl Trisulfide, figure (Pure Volatiles Figure). Microscopy phenotype with volatiles reflect the growth inhibition results. Vacualization was found in 2-undecanone and DMTS samples (Microscope Images). 
-
+Results: 
+We noticed that when Serratia marcescens (strain ADJS-2C_Red, Smar) streaked on the plate across from fungi, fungal growth was repressed. The growth area could quantitatively be assessed, based on growth with bacteria streaked on either side compared to growth with no bacteria (Figure 1A). However, this method is not ideal for studying volatiles because it allowed for bacterial metabolites or proteins to diffuse through the media, potentially coming in direct contact with the fungal hyphae. Additionally, the bacteria are mobile and could possibly induce a response by direct contact with the fungal hyphae. The “donut” assay  was developed to limit diffusion of bacterial products in the media to fungal hyphae (Figure 1B). This set-up allows for the exchange of gases between the fungi and bacteria, but prevents direct contact and allows for two types of media to be poured (one tailored to the bacteria and the other tailored to the fungi). This is useful for the use of antibiotics in the fungal media or fungi with special growth needs.  We tested the ability of various strains of bacteria and the amount of time they needed to be present on the media before the Rstol were introduced (Figure 2). We tested for this inhibition across many fungi from various phylogenetic clades such as Basidiobolus, Mucor, Rhizopus, Alternaria, and Neurospora. For all strains the exchange of gases was enough to inhibit fungal growth after two days of bacteria growth. LB media was used to grow bacteria and was left uninoculated in the control experiments. The fungal spores/conidia were introduced onto the center plate after 48 hours of bacteria growth. The plates were measured after 24 and 48 hours, (Figure 3). The results show that Spro followed by Smar then Bsub had the highest inhibition of Rstol growth. Spro inhibition of Ncrassa and Rhizopus Smar had an average growth being 1.5 cm at 24 hours and 4 cm at 48 hours. Bsub was a weaker inhibitor of growth with the average growth of the fungi being 2.8 and 5.2 cm at 24 and 48 hours, respectively. Control growth of Rstol with no bacteria inoculated on the LB outer ring was 3.7 cm at 24 hours and had grown to the diameter of the plate (5.7 cm) at 48 hours. 
+After establishing that fungal growth inhibitors reside in the volatiles of bacteria we used Gas Chromatography coupled with Mass Spectrometry to identify the compounds produced by our strains of bacteria. Based on previous literature we assumed that we would find 2-undecanone and dimethyl disulfide [30]. On average there were about 50 volatiles produced by each strain. Strains with less than 500ng detected were thrown out, Smar_F and Spro_I, (Figure 4). The volatiles identified are listed in supplemental table 1. To analyze the volatiles, we restricted the results to only the volatiles with a confident prediction (Thermo Mass Spectrometry RSI Score) of over 85%, and volatiles found in more than half of a sample’s replicates, this left us with 5-15 unique volatiles produced per species with 13 compounds produced by all the bacteria (Figure 5). Using an internal standard amounts of volatiles were predicted, this left us with an approximate abundance of compounds. Smar, Spro, and Bsub strain had different volatiles as well as different amounts produced (Figure 6). The top quartile of production had 13 compounds produced by two out of three of the species, only Anisole and 2-methoxyphenol were produced by Smar soley (Figure 7). Non Dimensional Multivariate Scaling (NMDS) shows low stress and resolves Bacillus and Serratia cleanly.
+To further analyze the data we used MetaboAnalyst [74,75], an R package for metabolite profiles. Comparisons were made between all three samples, Bsub, Smar and Spro to see if each species could be differentiated by volatile profiles. Auto-scaling centered around the volatile production average was used to make all metabolites comparable (Figure 9), the samples were averaged together and compared to show which samples were differentially produced by the bacterial strains (Figure 10). Principal Component Axis (PCA) analyzed the variance between each of the replicates (Figure 11). ANOVA analysis with a p-value cut off .05 and Tukey’s/HSD analysis reveals eleven significantly produce volatiles compounds (Figure 12, Table, Figure 13). After 5000 trees Spro and Smar were unable to be predicted based on their profiles (Figure 14).  
+	The analysis identified volatiles produced by Smar, Spro, and Bsub. We tested 2-undecanone, Dimethyl Trisulfide, Anisole, Lepidine, 2,5-dimethylpyrazine as they were some of the highest produced volatiles from the bacteria. 2-undecanone was chosen because it is a known antifungal [30], is used in food and fragrance, as well as an effective insect repellent approved for use with humans [68,76]. Dimethyl Trisulfide was tested based on the abundance in the Spro profile and sulfur content. Anisole was solely produced by Smar in high amounts. To test the volatiles we loaded the compounds onto a piece of filter paper on a glass microscope slide on the side of a petri dish with media, spores/conidia were inoculated approximately 2 cm away on the media. The effective volatiles for preventing growth were 2-undecanone, Anisole, and Dimethyl Trisulfide, figure (Figure 15). Microscopy phenotype with volatiles reflect the growth inhibition results. Vacualization was found in 2-undecanone and DMTS samples (Figure 16, Microscope Images). 
 
 ```{r donut, echo=FALSE, out.height= "90%", fig.pos = "H", fig.cap="A) Streaks of serratia on either side of fungi. B) Donut plate assays of Rstol and other fungi showed the functionality of volatiles inhibiting fungal growth in the presence of bacteria. The bacteria in the LB agar ring on the outside of the plate were not able to come into physical contact with the fungi. Interactions were solely restricted to the volatiles released into the shared headspace of the petri dish. Donut plates both show fungal inhibition of growth with at 48 hours (I E. coli, II Smar, III Smar fungi covered, IV No bacteria)."}
 streak <-  rasterGrob(as.raster(readPNG("images/streaks.png")), interpolate = TRUE)
@@ -119,13 +119,10 @@ timelap.bar
 #Pathogens Inhbition
 #Fungal data with S. pro, S. mar, and B. subtilis
 
-Actino <- read_excel("Volatile.xlsx", sheet= "Actino")
-#Conidi <- read_excel("Volatile.xlsx", sheet = "Conidi")
-Basidi<- read_excel("Volatile.xlsx", sheet = "Basidi")
-Mucor<- read_excel("Volatile.xlsx", sheet = "Mucor")
-Alt<- read_excel("Volatile.xlsx", sheet = "Alt")
-Rhizo<- read_excel("Volatile.xlsx", sheet = "Rhizo")
-Ncra<- read_excel("Volatile.xlsx", sheet = "Ncrassa_donut")
+Basidi<- read_excel("Volatile.xlsx", sheet = "Basidi", range="A1:D10")
+Alt<- read_excel("Volatile.xlsx", sheet = "Alt", range="A1:D10")
+Rhizo<- read_excel("Volatile.xlsx", sheet = "Rhizo", range="A1:D12")
+Ncra<- read_excel("Volatile.xlsx", sheet = "Ncrassa_donut", range="A1:D10")
 
 
 #+++++++++++++++++++++++++
@@ -149,53 +146,24 @@ data_summary <- function(data, varname, groupnames){
  return(data_sum)
 }
 
-
-#actino
-patho <- Actino
-patho.m <- melt(as.data.frame(patho), id.vars = "Bacteria")
-colnames(patho.m) <- c("Strain","Time","Growth")
-
-dfm <- data_summary(patho.m, varname="Growth", 
-                    groupnames=c("Strain", "Time"))
-actino.plot <- ggplot(dfm, aes(x=Time, y=Growth, group=Strain, color=Strain)) + 
-  geom_errorbar(aes(ymin=Growth-sd, ymax=Growth+sd), width=.1) +
-    geom_line() + geom_point()+
-   scale_color_brewer(palette="Paired")+theme_minimal() + ggtitle("Actinomucor")+theme(legend.position="bottom")
-#conidiobolus
-
-#patho <- Conidi
-#patho.m <- melt(as.data.frame(patho), id.vars = "Bacteria")
-#colnames(patho.m) <- c("Strain","Time","Growth")
-
-#dfm <- data_summary(patho.m, varname="Growth", groupnames=c("Strain", "Time"))
-#conidio.plot <- ggplot(dfm, aes(x=Time, y=Growth, group=Strain, color=Strain)) + 
-   # geom_errorbar(aes(ymin=Growth-sd, ymax=Growth+sd), width=.1) +
-   # geom_line() + geom_point()+
-   #scale_color_brewer(palette="Paired")+theme_minimal()+ theme(legend.position = "none")+ ggtitle("Conidiobolus")+theme(legend.position="bottom")
-
 #basidiobolus
 patho <- Basidi
 patho.m <- melt(as.data.frame(patho), id.vars = "Bacteria")
 colnames(patho.m) <- c("Strain","Time","Growth")
-
+library(ddply)
+patho.mse <- summarySE(patho.m, measurevar="Growth", groupvars=c("Strain", "Time"))
 dfm <- data_summary(patho.m, varname="Growth", 
                     groupnames=c("Strain", "Time"))
 basidio.plot <- ggplot(dfm, aes(x=Time, y=Growth, group=Strain, color=Strain)) + 
     geom_errorbar(aes(ymin=Growth-sd, ymax=Growth+sd), width=.1) +
-    geom_line() + geom_point()+
-   scale_color_brewer(palette="Paired")+theme_minimal()+ theme(legend.position = "none")+ ggtitle("Basidiobolus")
+    geom_line() + geom_point()+ theme(legend.position = "none")+ ggtitle("Basidiobolus") +ylab("") + stat_compare_means(method = "anova", label.y = 60) + stat_compare_means(aes(label = ..p.signif..), method = "t.test", ref.group = "None")
 
-#Mucor
-patho <- Mucor
-patho.m <- melt(as.data.frame(patho), id.vars = "Bacteria")
-colnames(patho.m) <- c("Strain","Time","Growth")
+basidio.plot
 
-dfm <- data_summary(patho.m, varname="Growth", 
-                    groupnames=c("Strain", "Time"))
-mucor.plot <- ggplot(dfm, aes(x=Time, y=Growth, group=Strain, color=Strain)) + 
-    geom_errorbar(aes(ymin=Growth-sd, ymax=Growth+sd), width=.1) +
-    geom_line() + geom_point()+
-   scale_color_brewer(palette="Paired")+theme_minimal()+ theme(legend.position = "none")+ ggtitle("Mucor")
+```
+
+```{r}
+
 
 #Alternaria
 patho <- Alt
@@ -206,11 +174,11 @@ dfm <- data_summary(patho.m, varname="Growth",
                     groupnames=c("Strain", "Time"))
 alternaria.plot <- ggplot(dfm, aes(x=Time, y=Growth, group=Strain, color=Strain)) + 
     geom_errorbar(aes(ymin=Growth-sd, ymax=Growth+sd), width=.1) +
-    geom_line() + geom_point()+
-   scale_color_brewer(palette="Paired")+theme_minimal()+ theme(legend.position = "none")+ ggtitle("Alternaria")
+    geom_line() + geom_point()+ theme(legend.position = "none")+ ggtitle("Alternaria")+ ylab("Percent Petri Dish")+ stat_compare_means(method = "anova", label.y = 35) + stat_compare_means(aes(label = ..p.signif..), method = "t.test", ref.group = "None")
 
 #Rhizo
 patho <- Rhizo
+patho
 patho.m <- melt(as.data.frame(patho), id.vars = "Bacteria")
 colnames(patho.m) <- c("Strain","Time","Growth")
 
@@ -218,8 +186,8 @@ dfm <- data_summary(patho.m, varname="Growth",
                     groupnames=c("Strain", "Time"))
 rhizo.plot <- ggplot(dfm, aes(x=Time, y=Growth, group=Strain, color=Strain)) + 
     geom_errorbar(aes(ymin=Growth-sd, ymax=Growth+sd), width=.1) +
-    geom_line() + geom_point()+
-   scale_color_brewer(palette="Paired") + theme_minimal() +  ggtitle("Rsol")+theme(legend.position = "none")
+    geom_line() + geom_point() +ggtitle("Rsol") + theme(legend.position = "bottom") + ylab("")+ stat_compare_means(method = "anova", label.y = 60) + stat_compare_means(aes(label = ..p.signif..), method = "t.test", ref.group = "None")
+rhizo.plot
 
 #Ncrassa
 patho <- Ncra
@@ -230,25 +198,23 @@ dfm <- data_summary(patho.m, varname="Growth",
                     groupnames=c("Strain", "Time"))
 ncrassa.plot <- ggplot(dfm, aes(x=Time, y=Growth, group=Strain, color=Strain)) + 
     geom_errorbar(aes(ymin=Growth-sd, ymax=Growth+sd), width=.1) +
-    geom_line() + geom_point()+
-   scale_color_brewer(palette="Paired")+theme_minimal()+ ggtitle("Neurospora") +theme(legend.position = "none")
+    geom_line() + geom_point()+ ggtitle("Neurospora") +theme(legend.position = "none")+ylab("")+ stat_compare_means(method = "anova", label.y = 60) + stat_compare_means(aes(label = ..p.signif..), method = "t.test", ref.group = "None")
 
 leg.plot <- ggplot(dfm, aes(x=Time, y=Growth, group=Strain, color=Strain)) + 
     geom_errorbar(aes(ymin=Growth-sd, ymax=Growth+sd), width=.1) +
-    geom_line() + geom_point()+
-   scale_color_brewer(palette="Paired")+theme_minimal()+ ggtitle("Neurospora")
-
+    geom_line() + geom_point()+ ggtitle("Neurospora")
 leg.plot
 leg <- get_legend(leg.plot)
 
 as_ggplot(leg)
 
-
+leg
 ```
 
 ```{r pathos, echo=FALSE, warning=FALSE, out.width = "90%", fig.pos="H",fig.cap="Pathogenic fungi and their growth inhibtion with bacterial volatiles"}
 grid.newpage()
-grid.arrange(alternaria.plot, basidio.plot, mucor.plot, ncrassa.plot, rhizo.plot, leg, nrow = 2, ncol=3,layout_matrix = rbind(c(1, 2, 3), c(4, 5, 6)))
+grid.arrange(alternaria.plot, basidio.plot, ncrassa.plot, rhizo.plot, leg, nrow = 2, ncol=3,layout_matrix = rbind(c(1, 2, 4), c(3, 5, 4)))
+
 ```
 
 ```{r include=FALSE}
@@ -269,7 +235,7 @@ vol_total
 ```{r venndia, echo=FALSE,fig.pos="H", out.width = "90%",fig.cap="Over lap of related volatiles produced by three species of bacteria"}
 
 grid.newpage()
-Venn <- draw.triple.venn(area1 = 101, area2 = 124, area3 = 115, n12 = 51, n23 = 81, n13 = 55, n123 = 47, category = c("Bsub", "Smar", "Spro"), lty = rep("solid", 3), fill = c("lightcoral", "olivedrab3", "lightblue2"))
+Venn <- draw.triple.venn(area1 = 34, area2 = 31, area3 = 29, n12 = 16, n23 = 23, n13 = 16, n123 = 13, category = c("Bsub", "Smar", "Spro"), lty = rep("solid", 3), fill = c("lightcoral", "olivedrab3", "lightblue2"))
 
 
 ```
@@ -291,14 +257,7 @@ plot(NMDS)
 
 ``` 
 
-```{r nmds, echo=FALSE, out.width = "90%", fig.pos="H",fig.cap="NMDS showing differences between Bacillus and Serratia"}
 
-treat=c(rep("Bsub",9),rep("Smar",8),rep("Spro",8))
-ordiplot(NMDS,type="points")
-ordihull(NMDS,groups=treat,draw="polygon",col=c("red", "blue", "green"),label=F, scaling = 3, main = expression(air == 2), cex = 1)
-legend(x="bottomleft", legend=unique(treat), col=c("red", "blue", "green"), pch=16)
-#orditorp(NMDS,display="sites",col=c(rep("blue",9),rep("red",8),rep("black",8)), air=1)
-```
 
 ```{r include=FALSE}
 
@@ -446,6 +405,15 @@ vol.heatmap.RSI85.average
 vol.heatmap.RSI85.High
 ```
 
+```{r nmds, echo=FALSE, out.width = "90%", fig.pos="H",fig.cap="NMDS showing differences between Bacillus and Serratia"}
+
+treat=c(rep("Bsub",9),rep("Smar",8),rep("Spro",8))
+ordiplot(NMDS,type="points")
+ordihull(NMDS,groups=treat,draw="polygon",col=c("red", "blue", "green"),label=F, scaling = 3, main = expression(air == 2), cex = 1)
+legend(x="bottomleft", legend=unique(treat), col=c("red", "blue", "green"), pch=16)
+#orditorp(NMDS,display="sites",col=c(rep("blue",9),rep("red",8),rep("black",8)), air=1)
+```
+
 ```{r metabolanalyst_nooutliers, echo=FALSE, include=FALSE}
 metanr_packages <- function(){
   
@@ -549,21 +517,20 @@ dev.off
 ```{r pca, echo=FALSE, out.width = "90%", fig.pos="H",fig.cap="PCA plot showing variation amount samples of Bsub, Smar, and Spro"}
 knitr::include_graphics("pca_score3d_0_dpi600.png")
 ```
-
-```{r tree, echo=FALSE, out.width = "90%", fig.pos="H",fig.cap="Not sure if I should include this as it can be seen in the heatmap 3"}
-knitr::include_graphics("tree_4_dpi600.png")
+```{r meta_heat, echo=FALSE, out.width = "90%", fig.pos="H", fig.cap="Shows autoscaled volatiles and the production relative to each sample"}
+knitr::include_graphics("heatmap_3_dpi600.png")
 ```
 
-```{r meta_heat, echo=FALSE, out.width = "90%", fig.pos="H",fig.cap=""}
-knitr::include_graphics("heatmap_3_dpi600.png")
+```{r meta_heat_ave, echo=FALSE, out.width = "90%", fig.pos="H", fig.cap="Average of volatiles produced by each species of bacteria"}
 knitr::include_graphics("heatmap_7_dpi72.png")
 ```
 
-```{r anova, echo=FALSE, out.width = "90%", fig.pos="H",fig.cap=""}
+```{r meta_anova, echo=FALSE, out.width = "90%", fig.pos="H", fig.cap="ANOVA results showing 95% confidence or higher 11 compounds differentially produced by Bacteria"}
 knitr::include_graphics("aov_2_dpi600.png")
 ```
 
-```{r table2, echo=FALSE, message=FALSE, out.width = "100%", warning=FALSE, fig.pos = "H"}
+
+```{r table2, echo=FALSE, message=FALSE, out.width = "100%", warning=FALSE, fig.pos = "H", fig.cap="Table of differentially produced volatiles"}
 anov_res <- read_excel("Volatile.xlsx", sheet = "ANOVA")
 anov_res <- as.data.frame(anov_res)
 
@@ -573,9 +540,11 @@ anov_res %>%
 
 ```
 
-```{r anova_compounds, echo=FALSE, out.width = "100%", fig.pos="H",fig.cap="Compounds that were differentially expressed"}
+
+```{r anova_compounds, echo=FALSE, out.width = "100%", fig.pos="H", fig.cap="Relationship of differentially produced volatiles between each bacteria species"}
 grid.arrange(img1, img2, img3, img4, img5, img6, img7, img8, img9, img10, img11, nrow = 3, ncol = 4)
 ```
+
 
 ```{r include=FALSE}
 # Pure volatile inhibition
@@ -595,47 +564,31 @@ abund.plot
 
 
 
-```{r pdf_maker, include=FALSE}
+```{r include=FALSE}
+straw <- read_excel("Volatile.xlsx", sheet = "Strawberry", range="A1:B13")
 
-#only works for figures - not images
-pdf("Volatiles_figures.pdf")
+straw.plot <- ggplot(straw, aes(x=State, y=Spores, fill=State)) + geom_boxplot() + stat_compare_means(method = "t.test", label.x="With Smar") + xlab("Condition") + theme(legend.position = "none")
 
-timelap.bar
-grid.arrange(basidio.plot, mucor.plot, alternaria.plot, ncrassa.plot, rhizo.plot, nrow = 3, ncol=3,layout_matrix = rbind(c(2, 1, 3), c(5, 6, 6), c(5, 4, NA)))
-vol_total
-abund.plot 
-knitr::include_graphics("rf_imp_1_dpi600.png")
-knitr::include_graphics("rf_outlier_1_dpi600.png")
-knitr::include_graphics("pca_score3d_0_dpi600.png")
-knitr::include_graphics("tree_4_dpi600.png")
-plot(NMDS)
-treat=c(rep("Bacillus",9),rep("Red",8),rep("White",8))
-ordiplot(NMDS,type="n")
-ordihull(NMDS,groups=treat,draw="polygon",col="grey90",label=F)
-orditorp(NMDS,display="sites",col=c(rep("blue",9),rep("red",8),rep("black",8)),
-         air=0.01,cex=1.25)
-dendro.plot.RSI85.Average
-vol.heatmap.RSI85.average
-dendro.plot.RSI85.High
-vol.heatmap.RSI85.High
-knitr::include_graphics("heatmap_7_dpi600.png")
-knitr::include_graphics("aov_0_dpi600.png")
-knitr::include_graphics("rf_imp_1_dpi600.png")
-dev.off()
+```
+
+```{r strawberry, out.width="90%", fig.cap=Spores recovered from strawberries innoculated with Rstol in the presence of S. marcescens}
+
+straw.plot
 ```
 
 # Discussion:
-
-The biggest impact on the field. A reexamination of volatiles produced by Serratia marcescens reveals several antifungal compounds. An issue with 2-undecanone is that it has a very short halflife of 1.2 days [73].
+The biggest impact on the field. A reexamination of volatiles produced by Serratia marcescens reveals several antifungal compounds. An issue with 2-undecanone is that it has a very short halflife of 1.2 days [76].
 The context of impact within the field - Many studies are beginning to incorporate microbial communities into their work, the volatile profiles of these communities are at times neglected but can clearly play a major role. 
 Support from other work includes microbial community assembly work is being done, this adds to the body of work showing the importance of fungal bacteria interplay [1].
-Limitations of the work are that we are limited to the bacterial profile being created while bacteria are on LB media, hardly a realistic environmental conditions. It would be interesting to see the volatiles produced in various soil type and with various plant partners to see if there is a core volatome. 
+Limitations of the work are that we are limited to the bacterial profile being created while bacteria are on LB media, hardly a realistic environmental conditions. It would be interesting to see the volatiles produced in various soil types and with various plant partners to see if there is a core volatome. 
 
 # Conclusion:
 
 It appears the key to resisting the bacteria compounds is to metabolize or neutralize the volatiles. More work needs to be done in other systems, especially outside of a petri dish. Spores/Conidia can sense the presence of volatiles and wait until favorable conditions, this would be an interesting follow-up experiment to learn about environmental cues that stop fungi from germinating from conidia. 
 Looking into additional compounds to find more fungal responses or if there is a conserved fungal response. Anisole would be an interesting compound to follow up on, only found in Serratia marcescens (ADJS-Red). Not in Bacillus. 
 Searching for new antifungals is important. Looking to the future, volatile profiles with multiple antifungal components may be important for the war against fungi. 
+
+
 
 # References
 
@@ -664,49 +617,57 @@ Searching for new antifungals is important. Looking to the future, volatile prof
 22. 	Kurze S, Bahl H, Dahl R, Berg G. Biological Control of Fungal Strawberry Diseases by Serratia plymuthica HRO-C48. Plant Dis. 2001;85: 529–534.
 23. 	Trunk K, Peltier J, Liu Y-C, Dill BD, Walker L, Gow NAR, et al. The type VI secretion system deploys antifungal effectors against microbial competitors. Nature Microbiology. 2018; 1.
 24. 	Spraker JE, Wiemann P, Baccile JA, Venkatesh N, Schumacher J, Schroeder FC, et al. Conserved Responses in a War of Small Molecules between a Plant-Pathogenic Bacterium and Fungi. MBio. 2018;9. doi:10.1128/mBio.00820-18
-25. 	Ipcho S, Sundelin T, Erbs G, Kistler HC, Newman M-A, Olsson S. Fungal Innate Immunity Induced by Bacterial Microbe-Associated Molecular Patterns (MAMPs). G3 . 2016;6: 1585–1595.
-26. 	Soanes DM, Talbot NJ. Comparative Genome Analysis Reveals an Absence of Leucine-Rich Repeat Pattern-Recognition Receptor Proteins in the Kingdom Fungi. PLoS One. 2010;5: e12725.
-27. 	Gkarmiri K, Finlay RD, Alström S, Thomas E, Cubeta MA, Högberg N. Transcriptomic changes in the plant pathogenic fungus Rhizoctonia solani AG-3 in response to the antagonistic bacteria Serratia proteamaculans and Serratia plymuthica. BMC Genomics. 2015;16: 630.
-28. 	Wheatley RE. The consequences of volatile organic compound mediated bacterial and fungal interactions. Antonie Van Leeuwenhoek. 2002;81: 357–364.
-29. 	Schmidt R, Cordovez V, de Boer W, Raaijmakers J, Garbeva P. Volatile affairs in microbial interactions. ISME J. 2015;9: 2329–2335.
-30. 	Schulz-Bohm K, Martín-Sánchez L, Garbeva P. Microbial Volatiles: Small Molecules with an Important Role in Intra- and Inter-Kingdom Interactions. Front Microbiol. 2017;8: 2484.
-31. 	Ossowicki A, Jafra S, Garbeva P. The antimicrobial volatile power of the rhizospheric isolate Pseudomonas donghuensis P482. PLoS One. 2017;12: e0174362.
-32. 	Schmidt R, Etalo DW, de Jager V, Gerards S, Zweers H, de Boer W, et al. Microbial Small Talk: Volatiles in Fungal-Bacterial Interactions. Front Microbiol. 2015;6: 1495.
-33. 	Vespermann A, Kai M, Piechulla B. Rhizobacterial volatiles affect the growth of fungi and Arabidopsis thaliana. Appl Environ Microbiol. 2007;73: 5639–5641.
-34. 	Neupane S, Finlay RD, Alström S, Elfstrand M, Högberg N. Transcriptional responses of the bacterial antagonist Serratia plymuthica to the fungal phytopathogen Rhizoctonia solani. Environ Microbiol Rep. 2015;7: 123–127.
-35. 	Kai M, Crespo E, Cristescu SM, Harren FJM, Francke W, Piechulla B. Serratia odorifera: analysis of volatile emission and biological impact of volatile compounds on Arabidopsis thaliana. Appl Microbiol Biotechnol. 2010;88: 965–976.
-36. 	Hoffman MT, Gunatilaka MK, Wijeratne K, Gunatilaka L, Arnold AE. Endohyphal bacterium enhances production of indole-3-acetic acid by a foliar fungal endophyte. PLoS One. 2013;8: e73132.
-37. 	Taghavi T, Kim C, Rahemi A. Role of Natural Volatiles and Essential Oils in Extending Shelf Life and Controlling Postharvest Microorganisms of Small Fruits. Microorganisms. 2018;6. doi:10.3390/microorganisms6040104
-38. 	Kanchiswamy CN, Malnoy M, Maffei ME. Chemical diversity of microbial volatiles and their potential for plant growth and productivity. Front Plant Sci. 2015;6: 151.
-39. 	Lemfack MC, Gohlke B-O, Toguem SMT, Preissner S, Piechulla B, Preissner R. mVOC 2.0: a database of microbial volatiles. Nucleic Acids Res. 2018;46: D1261–D1265.
-40. 	Sharifi R, Ryu C-M. Sniffing bacterial volatile compounds for healthier plants. Curr Opin Plant Biol. 2018;44: 88–97.
-41. 	Minnich M. Behavior and determination of volatile organic compounds in soil: A literature review [Internet]. Lockheed Environmental Systems and Technologies Co., Las Vegas, NV (United States); 1993 May. Report No.: PB-94-100153/XAB. Available: https://www.osti.gov/biblio/5582173
-42. 	Ashelford KE, Fry JC, Bailey MJ, Day MJ. Characterization of Serratia isolates from soil, ecological implications and transfer of Serratia proteamaculans subsp. quinovora Grimont et al. 1983 to Serratia quinivorans corrig., sp. nov. Int J Syst Evol Microbiol. 2002;52: 2281–2289.
-43. 	Dhar Purkayastha G, Mangar P, Saha A, Saha D. Evaluation of the biocontrol efficacy of a Serratia marcescens strain indigenous to tea rhizosphere for the management of root rot disease in tea. PLoS One. 2018;13: e0191761.
-44. 	De Vleesschauwer D, Höfte M. Using Serratia plymuthica to control fungal pathogens of plants. CAB Reviews. 2003; Available: https://biblio.ugent.be/publication/385377/file/582805
-45. 	Gutiérrez-Román MI, Holguín-Meléndez F, Bello-Mendoza R, Guillén-Navarro K, Dunn MF, Huerta-Palacios G. Production of prodigiosin and chitinases by tropical Serratia marcescens strains with potential to control plant pathogens. World J Microbiol Biotechnol. 2012;28: 145–153.
-46. 	Duzhak AB, Panfilova ZI, Duzhak TG, Vasyunina EA, Shternshis MV. Role of prodigiosin and chitinases in antagonistic activity of the bacterium Serratia marcescens against the fungus Didymella applanata. Biochemistry . 2012;77: 910–916.
-47. 	Srobel G, Li JY, Sugawara F, Koshino H, Harper J, Hess WM. Oocydin A, a chlorinated macrocyclic lactone with potent anti-oomycete activity from Serratia marcescens. Microbiology. 1999;145 ( Pt 12): 3557–3564.
-48. 	Weise T, Thürmer A, Brady S, Kai M, Daniel R, Gottschalk G, et al. VOC emission of various Serratia species and isolates and genome analysis of Serratia plymuthica 4Rx13. FEMS Microbiol Lett. 2014;352: 45–53.
-49. 	Schulz S, Dickschat JS, Kunze B, Wagner-Dobler I, Diestel R, Sasse F. Biological activity of volatiles from marine and terrestrial bacteria. Mar Drugs. 2010;8: 2976–2987.
-50. 	Herrington PR, Craig JT, Chea CY, Sheridan JE. Inhibition of spore germination by volatiles from Streptomyces griseoruber. Soil Biol Biochem. 1985;17. Available: http://agris.fao.org/agris-search/search.do?recordID=US201301443033
-51. 	Khalid S, Baccile JA, Spraker JE, Tannous J, Imran M, Schroeder FC, et al. NRPS-Derived Isoquinolines and Lipopetides Mediate Antagonism between Plant Pathogenic Fungi and Bacteria. ACS Chem Biol. 2018;13: 171–179.
-52. 	Caballero Ortiz S, Trienens M, Pfohl K, Karlovsky P, Holighaus G, Rohlfs M. Phenotypic responses to microbial volatiles render a mold fungus more susceptible to insect damage. Ecol Evol. 2018;8: 4328–4339.
-53. 	Plyuta V, Lipasova V, Popova A, Koksharova O, Kuznetsov A, Szegedi E, et al. Influence of volatile organic compounds emitted by Pseudomonas and Serratia strains on Agrobacterium tumefaciens biofilms. APMIS. 2016;124: 586–594.
-54. 	Yu K, Hamilton-Kemp TR, Archbold DD, Collins RW, Newman MC. Volatile compounds from Escherichia coli O157:H7 and their absorption by strawberry fruit. J Agric Food Chem. 2000;48: 413–417.
-55. 	Groenhagen U, Baumgartner R, Bailly A, Gardiner A, Eberl L, Schulz S, et al. Production of bioactive volatiles by different Burkholderia ambifaria strains. J Chem Ecol. 2013;39: 892–906.
-56. 	Reddy DN, Al-Rajab AJ. Chemical composition, antibacterial and antifungal activities of Ruta graveolens L. volatile oils. Cogent Chemistry. 2016;2: 1220055.
-57. 	Giorgio A, De Stradis A, Lo Cantore P, Iacobellis NS. Biocide effects of volatile organic compounds produced by potential biocontrol rhizobacteria on Sclerotinia sclerotiorum. Front Microbiol. 2015;6: 1056.
-58. 	Bohbot JD, Dickens JC. Insect repellents: modulators of mosquito odorant receptor activity. PLoS One. 2010;5: e12138.
-59. 	Khan IA, Abourashed EA. Leung’s Encyclopedia of Common Natural Ingredients: Used in Food, Drugs and Cosmetics. Wiley; 2009.
-60. 	Mendes NS, Bitencourt TA, Sanches PR, Silva-Rocha R, Martinez-Rossi NM, Rossi A. Transcriptome-wide survey of gene expression changes and alternative splicing in Trichophyton rubrum in response to undecanoic acid. Sci Rep. 2018;8: 2520.
-61. 	Aryal SK, Carter-House D, Stajich JE, Dillman AR. Microbial associates of the southern mole cricket (Scapteriscus borellii) are highly pathogenic. J Invertebr Pathol. 2017;150: 54–62.
-62. 	Na F. Identification of Two Novel Fungal Species Associated with Kuroshio Shot Hole Borer (Euwallacea sp.) and Evaluation of Novel Biological Control Method to Inhibit the Fungal Associates of the Invasive Ambrosia Beetle Species in California [Internet]. UC Riverside. 2016. Available: https://escholarship.org/uc/item/8394m1k0
-63. 	Benny GL. Methods Used by Dr. R. K. Benjamin, and Other Mycologists, to Isolate Zygomycetes. Aliso: A Journal of Systematic and Evolutionary Botany. 2008;26: 37–61.
-64. 	Popova AA, Koksharova OA, Lipasova VA, Zaitseva JV, Katkova-Zhukotskaya OA, Eremina SI, et al. Inhibitory and Toxic Effects of Volatiles Emitted by Strains of Pseudomonas and Serratia on Growth and Survival of Selected Microorganisms, Caenorhabditis elegans, and Drosophila melanogaster. Biomed Res Int. 2014;2014. doi:10.1155/2014/125704
-65. 	Chong J, Yamamoto M, Xia J. MetaboAnalystR 2.0: From Raw Spectra to Biological Insights. Metabolites. 2019;9. doi:10.3390/metabo9030057
-66. 	Chong J, Xia J. MetaboAnalystR: an R package for flexible and reproducible analysis of metabolomics data. Bioinformatics. 2018;34: 4313–4314.
-67. 	TOXNET. In: NIH Toxicology Data Network [Internet]. 30 Aug 2006 [cited 6 Sep 2019]. Available: https://toxnet.nlm.nih.gov/cgi-bin/sis/search2/r?dbs+hsdb:@term+@rn+@rel+112-12-9
-
+25. 	Mannaa M, Oh JY, Kim KD. Biocontrol Activity of Volatile-Producing Bacillus megaterium and Pseudomonas protegens against Aspergillus flavus and Aflatoxin Production on Stored Rice Grains. Mycobiology. 2017;45: 213–219.
+26. 	Gao H, Li P, Xu X, Zeng Q, Guan W. Research on Volatile Organic Compounds From Bacillus subtilis CF-3: Biocontrol Effects on Fruit Fungal Pathogens and Dynamic Changes During Fermentation. Front Microbiol. 2018;9: 456.
+27. 	Machado AP, Anzai M, Fischman O. Bacillus subtilis induces morphological changes in Fonsecaea pedrosoi in vitro resulting in more resistant fungal forms in vivo. J Venom Anim Toxins Incl Trop Dis. 2010;16: 592–598.
+28. 	Minerdi D, Bossi S, Gullino ML, Garibaldi A. Volatile organic compounds: a potential direct long-distance mechanism for antagonistic action of Fusarium oxysporum strain MSA 35. Environ Microbiol. 2009;11: 844–854.
+29. 	Vespermann A, Kai M, Piechulla B. Rhizobacterial volatiles affect the growth of fungi and Arabidopsis thaliana. Appl Environ Microbiol. 2007;73: 5639–5641.
+30. 	Popova AA, Koksharova OA, Lipasova VA, Zaitseva JV, Katkova-Zhukotskaya OA, Eremina SI, et al. Inhibitory and Toxic Effects of Volatiles Emitted by Strains of Pseudomonas and Serratia on Growth and Survival of Selected Microorganisms, Caenorhabditis elegans, and Drosophila melanogaster. Biomed Res Int. 2014;2014. doi:10.1155/2014/125704
+31. 	Gkarmiri K, Finlay RD, Alström S, Thomas E, Cubeta MA, Högberg N. Transcriptomic changes in the plant pathogenic fungus Rhizoctonia solani AG-3 in response to the antagonistic bacteria Serratia proteamaculans and Serratia plymuthica. BMC Genomics. 2015;16: 630.
+32. 	Woodhams DC, LaBumbard BC, Barnhart KL, Becker MH, Bletz MC, Escobar LA, et al. Prodigiosin, Violacein, and Volatile Organic Compounds Produced by Widespread Cutaneous Bacteria of Amphibians Can Inhibit Two Batrachochytrium Fungal Pathogens. Microb Ecol. 2017; doi:10.1007/s00248-017-1095-7
+33. 	Using Serratia plymuthica to control fungal pathogens of plants. In: Loop [Internet]. [cited 25 Jun 2016]. Available: http://loop.frontiersin.org/publications/29877540
+34. 	Schmidt R, Jager V de, Zühlke D, Wolff C, Bernhardt J, Cankar K, et al. Fungal volatile compounds induce production of the secondary metabolite Sodorifen in Serratia plymuthica PRI-2C. Sci Rep. 2017;7: 862.
+35. 	Srobel G, Li JY, Sugawara F, Koshino H, Harper J, Hess WM. Oocydin A, a chlorinated macrocyclic lactone with potent anti-oomycete activity from Serratia marcescens. Microbiology. 1999;145 ( Pt 12): 3557–3564.
+36. 	Dhar Purkayastha G, Mangar P, Saha A, Saha D. Evaluation of the biocontrol efficacy of a Serratia marcescens strain indigenous to tea rhizosphere for the management of root rot disease in tea. PLoS One. 2018;13: e0191761.
+37. 	Hu W, Kuang F, Lu Z, Zhang N, Chen T. Killing Effects of an Isolated Serratia marcescens KH-001 on Diaphorina citri via Lowering the Endosymbiont Numbers. Front Microbiol. 2018;9: 860.
+38. 	Duzhak AB, Panfilova ZI, Duzhak TG, Vasyunina EA, Shternshis MV. Role of prodigiosin and chitinases in antagonistic activity of the bacterium Serratia marcescens against the fungus Didymella applanata. Biochemistry . 2012;77: 910–916.
+39. 	Someya N, Nakajima M, Watanabe K, Hibi T, Akutsu K. Potential of Serratia marcescens strain B2 for biological control of rice sheath blight. Biocontrol Sci Technol. 2005;15: 105–109.
+40. 	Ipcho S, Sundelin T, Erbs G, Kistler HC, Newman M-A, Olsson S. Fungal Innate Immunity Induced by Bacterial Microbe-Associated Molecular Patterns (MAMPs). G3 . 2016;6: 1585–1595.
+41. 	Soanes DM, Talbot NJ. Comparative Genome Analysis Reveals an Absence of Leucine-Rich Repeat Pattern-Recognition Receptor Proteins in the Kingdom Fungi. PLoS One. 2010;5: e12725.
+42. 	Wheatley RE. The consequences of volatile organic compound mediated bacterial and fungal interactions. Antonie Van Leeuwenhoek. 2002;81: 357–364.
+43. 	Schmidt R, Cordovez V, de Boer W, Raaijmakers J, Garbeva P. Volatile affairs in microbial interactions. ISME J. 2015;9: 2329–2335.
+44. 	Schulz-Bohm K, Martín-Sánchez L, Garbeva P. Microbial Volatiles: Small Molecules with an Important Role in Intra- and Inter-Kingdom Interactions. Front Microbiol. 2017;8: 2484.
+45. 	Ossowicki A, Jafra S, Garbeva P. The antimicrobial volatile power of the rhizospheric isolate Pseudomonas donghuensis P482. PLoS One. 2017;12: e0174362.
+46. 	Schmidt R, Etalo DW, de Jager V, Gerards S, Zweers H, de Boer W, et al. Microbial Small Talk: Volatiles in Fungal-Bacterial Interactions. Front Microbiol. 2015;6: 1495.
+47. 	Neupane S, Finlay RD, Alström S, Elfstrand M, Högberg N. Transcriptional responses of the bacterial antagonist Serratia plymuthica to the fungal phytopathogen Rhizoctonia solani. Environ Microbiol Rep. 2015;7: 123–127.
+48. 	Kai M, Crespo E, Cristescu SM, Harren FJM, Francke W, Piechulla B. Serratia odorifera: analysis of volatile emission and biological impact of volatile compounds on Arabidopsis thaliana. Appl Microbiol Biotechnol. 2010;88: 965–976.
+49. 	Hoffman MT, Gunatilaka MK, Wijeratne K, Gunatilaka L, Arnold AE. Endohyphal bacterium enhances production of indole-3-acetic acid by a foliar fungal endophyte. PLoS One. 2013;8: e73132.
+50. 	Taghavi T, Kim C, Rahemi A. Role of Natural Volatiles and Essential Oils in Extending Shelf Life and Controlling Postharvest Microorganisms of Small Fruits. Microorganisms. 2018;6. doi:10.3390/microorganisms6040104
+51. 	Kanchiswamy CN, Malnoy M, Maffei ME. Chemical diversity of microbial volatiles and their potential for plant growth and productivity. Front Plant Sci. 2015;6: 151.
+52. 	Lemfack MC, Gohlke B-O, Toguem SMT, Preissner S, Piechulla B, Preissner R. mVOC 2.0: a database of microbial volatiles. Nucleic Acids Res. 2018;46: D1261–D1265.
+53. 	Sharifi R, Ryu C-M. Sniffing bacterial volatile compounds for healthier plants. Curr Opin Plant Biol. 2018;44: 88–97.
+54. 	Minnich M. Behavior and determination of volatile organic compounds in soil: A literature review [Internet]. Lockheed Environmental Systems and Technologies Co., Las Vegas, NV (United States); 1993 May. Report No.: PB-94-100153/XAB. Available: https://www.osti.gov/biblio/5582173
+55. 	Ashelford KE, Fry JC, Bailey MJ, Day MJ. Characterization of Serratia isolates from soil, ecological implications and transfer of Serratia proteamaculans subsp. quinovora Grimont et al. 1983 to Serratia quinivorans corrig., sp. nov. Int J Syst Evol Microbiol. 2002;52: 2281–2289.
+56. 	De Vleesschauwer D, Höfte M. Using Serratia plymuthica to control fungal pathogens of plants. CAB Reviews. 2003; Available: https://biblio.ugent.be/publication/385377/file/582805
+57. 	Gutiérrez-Román MI, Holguín-Meléndez F, Bello-Mendoza R, Guillén-Navarro K, Dunn MF, Huerta-Palacios G. Production of prodigiosin and chitinases by tropical Serratia marcescens strains with potential to control plant pathogens. World J Microbiol Biotechnol. 2012;28: 145–153.
+58. 	Weise T, Thürmer A, Brady S, Kai M, Daniel R, Gottschalk G, et al. VOC emission of various Serratia species and isolates and genome analysis of Serratia plymuthica 4Rx13. FEMS Microbiol Lett. 2014;352: 45–53.
+59. 	Schulz S, Dickschat JS, Kunze B, Wagner-Dobler I, Diestel R, Sasse F. Biological activity of volatiles from marine and terrestrial bacteria. Mar Drugs. 2010;8: 2976–2987.
+60. 	Herrington PR, Craig JT, Chea CY, Sheridan JE. Inhibition of spore germination by volatiles from Streptomyces griseoruber. Soil Biol Biochem. 1985;17. Available: http://agris.fao.org/agris-search/search.do?recordID=US201301443033
+61. 	Khalid S, Baccile JA, Spraker JE, Tannous J, Imran M, Schroeder FC, et al. NRPS-Derived Isoquinolines and Lipopetides Mediate Antagonism between Plant Pathogenic Fungi and Bacteria. ACS Chem Biol. 2018;13: 171–179.
+62. 	Caballero Ortiz S, Trienens M, Pfohl K, Karlovsky P, Holighaus G, Rohlfs M. Phenotypic responses to microbial volatiles render a mold fungus more susceptible to insect damage. Ecol Evol. 2018;8: 4328–4339.
+63. 	Plyuta V, Lipasova V, Popova A, Koksharova O, Kuznetsov A, Szegedi E, et al. Influence of volatile organic compounds emitted by Pseudomonas and Serratia strains on Agrobacterium tumefaciens biofilms. APMIS. 2016;124: 586–594.
+64. 	Yu K, Hamilton-Kemp TR, Archbold DD, Collins RW, Newman MC. Volatile compounds from Escherichia coli O157:H7 and their absorption by strawberry fruit. J Agric Food Chem. 2000;48: 413–417.
+65. 	Groenhagen U, Baumgartner R, Bailly A, Gardiner A, Eberl L, Schulz S, et al. Production of bioactive volatiles by different Burkholderia ambifaria strains. J Chem Ecol. 2013;39: 892–906.
+66. 	Reddy DN, Al-Rajab AJ. Chemical composition, antibacterial and antifungal activities of Ruta graveolens L. volatile oils. Cogent Chemistry. 2016;2: 1220055.
+67. 	Giorgio A, De Stradis A, Lo Cantore P, Iacobellis NS. Biocide effects of volatile organic compounds produced by potential biocontrol rhizobacteria on Sclerotinia sclerotiorum. Front Microbiol. 2015;6: 1056.
+68. 	Bohbot JD, Dickens JC. Insect repellents: modulators of mosquito odorant receptor activity. PLoS One. 2010;5: e12138.
+69. 	Khan IA, Abourashed EA. Leung’s Encyclopedia of Common Natural Ingredients: Used in Food, Drugs and Cosmetics. Wiley; 2009.
+70. 	Mendes NS, Bitencourt TA, Sanches PR, Silva-Rocha R, Martinez-Rossi NM, Rossi A. Transcriptome-wide survey of gene expression changes and alternative splicing in Trichophyton rubrum in response to undecanoic acid. Sci Rep. 2018;8: 2520.
+71. 	Aryal SK, Carter-House D, Stajich JE, Dillman AR. Microbial associates of the southern mole cricket (Scapteriscus borellii) are highly pathogenic. J Invertebr Pathol. 2017;150: 54–62.
+72. 	Na F. Identification of Two Novel Fungal Species Associated with Kuroshio Shot Hole Borer (Euwallacea sp.) and Evaluation of Novel Biological Control Method to Inhibit the Fungal Associates of the Invasive Ambrosia Beetle Species in California [Internet]. UC Riverside. 2016. Available: https://escholarship.org/uc/item/8394m1k0
+73. 	Benny GL. Methods Used by Dr. R. K. Benjamin, and Other Mycologists, to Isolate Zygomycetes. Aliso: A Journal of Systematic and Evolutionary Botany. 2008;26: 37–61.
+74. 	Chong J, Yamamoto M, Xia J. MetaboAnalystR 2.0: From Raw Spectra to Biological Insights. Metabolites. 2019;9. doi:10.3390/metabo9030057
+75. 	Chong J, Xia J. MetaboAnalystR: an R package for flexible and reproducible analysis of metabolomics data. Bioinformatics. 2018;34: 4313–4314.
+76. 	TOXNET. In: NIH Toxicology Data Network [Internet]. 30 Aug 2006 [cited 6 Sep 2019]. Available: https://toxnet.nlm.nih.gov/cgi-bin/sis/search2/r?dbs+hsdb:@term+@rn+@rel+112-12-9
 
 
