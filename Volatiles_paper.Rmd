@@ -25,6 +25,7 @@ library(gridExtra)
 library(float)
 library(kableExtra)
 library(ggpubr)
+library(plyr)
 options(tinytex.verbose = TRUE)
 ```
 \newpage
@@ -35,8 +36,9 @@ This research shows bacteria that live in the soil (Serratia marcescens, Serrati
 
 # Introduction:
 
-Interactions between Fungi and Bacteria span mutualistic, such as bacteria using fungal hyphae as highways[1], to antagonistic as seen in the famous penicillin discovery [2]. Improvements in imaging and sequencing approaches have aided in illuminating the niches where fungi and bacteria communities coexist, communicate and cooperate. Such as metagenomics in lichen symbioses of cyanobacteria and fungi [3], and what organisms are competition within the topsoil [4], or coexisting in extreme environments [5]. Tools for microbiomics have enabled studies of how fungal and bacterial. For example, Aspergillus nidulans was found to activate secondary metabolites after physical contact with Streptococcus, these metabolites are similar to lecanoric acid found in lichen symbiosis but also functions as a defense compound inhibiting ATP production[6]. Bacteria may help fungi to be better pathogens by creating toxins like Rhizoxin [7]. Bacterial-fungal communities are unique and diverse leading to discoveries from studying these relationships include finding that early lineages of fungi harbor ecto- and endohyphal bacteria and their role in asexual reproduction, nitrogen, and carbon utilization [8–14][6,7,15][8–14], mechanisms and applications of bacterial-fungal interactions [16], and microbial volatile bouquets [17] . Bacteria utilize fungal hyphae for high-speed travel, they can eat fungi, and they can consume the metabolites. [1,18–20]. These relationships have yielded many benefits including furthering our understanding of nutrient cycling in ecosystems, fermented foods and beverages, and antibiotics [21].  
-Microbial genomes encode genes for many antifungals and antibiotics [22]. Some studies have highlighted antagonism, table 1. Such as work has brought about the approval of Serratia plymuthica as a biocontrol (Rhizostar) that reduces Verticillium wilt by 18.5% and Phytophthora cactorum root rot by 33.4% in strawberry [23]. A conserved response to bacteria was demonstrated when antagonistic Lysobacter enzymogenes was shown to repress fungal response genes with effectors. Another repressor produced by Serratia marcescens (Smar), inhibits the growth of Candida albicans, [24]. Recently, Fusarium fujikuroi and Botrytis cinerea were shown to protect their survival spores after exposure to the bacterial secondary metabolite, ralstonin, from Ralstonia solanacearum [25]. To add to the complexity, fungal-bacterial interactions occur among communities of organisms where detection and specific response to organisms from plants to animals may be required [16,21]. 
+Interactions between Fungi and Bacteria span mutualistic, such as bacteria using fungal hyphae as highways[1], to antagonistic as seen in the famous penicillin discovery [2]. Improvements in imaging and sequencing approaches have aided in illuminating the niches where fungi and bacteria communities coexist, communicate and cooperate. Such as metagenomics in lichen symbioses of cyanobacteria and fungi [3], and what organisms are competition within the topsoil [4], or coexisting in extreme environments [5]. Tools for microbiomics have enabled studies of how fungal and bacterial. For example, Aspergillus nidulans was found to activate secondary metabolites after physical contact with Streptococcus, these metabolites are similar to lecanoric acid found in lichen symbiosis but also functions as a defense compound inhibiting ATP production[6]. Bacteria may help fungi to be better pathogens by creating toxins like Rhizoxin [7]. Bacterial-fungal communities are unique and diverse leading to discoveries from studying these relationships include finding that early lineages of fungi harbor ecto- and endohyphal bacteria and their role in asexual reproduction, nitrogen, and carbon utilization [8–14], mechanisms and applications of bacterial-fungal interactions [15], and microbial volatile bouquets [16] . Bacteria utilize fungal hyphae for high-speed travel, they can eat fungi, and they can consume the metabolites. [1,17–19]. These relationships have yielded many benefits including furthering our understanding of nutrient cycling in ecosystems, fermented foods and beverages, and antibiotics [20].  
+Microbial genomes encode genes for many antifungals and antibiotics [21]. Some studies have highlighted antagonism, table 1. Such as work has brought about the approval of Serratia plymuthica as a biocontrol (Rhizostar) that reduces Verticillium wilt by 18.5% and Phytophthora cactorum root rot by 33.4% in strawberry [22]. A conserved response to bacteria was demonstrated when antagonistic Lysobacter enzymogenes was shown to repress fungal response genes with effectors. Another repressor produced by Serratia marcescens (Smar), inhibits the growth of Candida albicans, [23]. Recently, Fusarium fujikuroi and Botrytis cinerea were shown to protect their survival spores after exposure to the bacterial secondary metabolite, Ralstonin, from Ralstonia solanacearum [24]. To add to the complexity, fungal-bacterial interactions occur among communities of organisms where detection and specific response to organisms from plants to animals may be required [15,20]. 
+
 
 ```{r table1, echo=FALSE, message=FALSE, out.width = "80%", warning=FALSE, fig.pos = "H"}
 refs <- read_excel("Volatile.xlsx", sheet = "refs")
@@ -116,6 +118,18 @@ timelap.bar
 ```
 
 ```{r include=FALSE}
+straw <- read_excel("Volatile.xlsx", sheet = "Strawberry", range="A1:B13")
+
+straw.plot <- ggplot(straw, aes(x=State, y=Spores, fill=State)) + geom_boxplot() + stat_compare_means(method = "t.test", label.x="With Smar") + xlab("Condition") + theme(legend.position = "none")
+
+```
+
+```{r strawberry, echo=FALSE, out.width="90%", fig.cap="Spores recovered from strawberries innoculated with Rstol in the presence of S. marcescens"}
+
+straw.plot
+```
+
+```{r include=FALSE}
 #Pathogens Inhbition
 #Fungal data with S. pro, S. mar, and B. subtilis
 
@@ -124,45 +138,18 @@ Alt<- read_excel("Volatile.xlsx", sheet = "Alt", range="A1:D10")
 Rhizo<- read_excel("Volatile.xlsx", sheet = "Rhizo", range="A1:D12")
 Ncra<- read_excel("Volatile.xlsx", sheet = "Ncrassa_donut", range="A1:D10")
 
-
-#+++++++++++++++++++++++++
-# Function to calculate the mean and the standard deviation
-  # for each group
-#+++++++++++++++++++++++++
-# data : a data frame
-# varname : the name of a column containing the variable
-  #to be summariezed
-# groupnames : vector of column names to be used as
-  # grouping variables
-data_summary <- function(data, varname, groupnames){
-  require(plyr)
-  summary_func <- function(x, col){
-    c(mean = mean(x[[col]], na.rm=TRUE),
-      sd = sd(x[[col]], na.rm=TRUE))
-  }
-  data_sum<-ddply(data, groupnames, .fun=summary_func,
-                  varname)
-  data_sum <- rename(data_sum, c("mean" = varname))
- return(data_sum)
-}
-
 #basidiobolus
 patho <- Basidi
 patho.m <- melt(as.data.frame(patho), id.vars = "Bacteria")
 colnames(patho.m) <- c("Strain","Time","Growth")
-library(ddply)
-patho.mse <- summarySE(patho.m, measurevar="Growth", groupvars=c("Strain", "Time"))
-dfm <- data_summary(patho.m, varname="Growth", 
-                    groupnames=c("Strain", "Time"))
-basidio.plot <- ggplot(dfm, aes(x=Time, y=Growth, group=Strain, color=Strain)) + 
-    geom_errorbar(aes(ymin=Growth-sd, ymax=Growth+sd), width=.1) +
-    geom_line() + geom_point()+ theme(legend.position = "none")+ ggtitle("Basidiobolus") +ylab("") + stat_compare_means(method = "anova", label.y = 60) + stat_compare_means(aes(label = ..p.signif..), method = "t.test", ref.group = "None")
+
+patho.mse <- ddply(patho.m, c("Strain","Time") , summarise, N = length(Growth), mean = mean(Growth), sd   = sd(Growth), se   = sd / sqrt(N))
+patho.mse
+
+basidio.plot <- ggplot(patho.mse, aes(x=Time, y=mean, group=Strain, color=Strain)) + geom_errorbar(aes(ymin=mean-sd, ymax=mean+sd), width=.1) +geom_line() + geom_point()+ theme(legend.position = "none")+ ggtitle("Basidiobolus") +ylab("")
 
 basidio.plot
 
-```
-
-```{r}
 
 
 #Alternaria
@@ -170,11 +157,7 @@ patho <- Alt
 patho.m <- melt(as.data.frame(patho), id.vars = "Bacteria")
 colnames(patho.m) <- c("Strain","Time","Growth")
 
-dfm <- data_summary(patho.m, varname="Growth", 
-                    groupnames=c("Strain", "Time"))
-alternaria.plot <- ggplot(dfm, aes(x=Time, y=Growth, group=Strain, color=Strain)) + 
-    geom_errorbar(aes(ymin=Growth-sd, ymax=Growth+sd), width=.1) +
-    geom_line() + geom_point()+ theme(legend.position = "none")+ ggtitle("Alternaria")+ ylab("Percent Petri Dish")+ stat_compare_means(method = "anova", label.y = 35) + stat_compare_means(aes(label = ..p.signif..), method = "t.test", ref.group = "None")
+alternaria.plot <- ggplot(patho.mse, aes(x=Time, y=mean, group=Strain, color=Strain)) + geom_errorbar(aes(ymin=mean-sd, ymax=mean+sd), width=.1) +geom_line() + geom_point()+ theme(legend.position = "none")+ ggtitle("Alternaria")+ ylab("Percent Petri Dish")
 
 #Rhizo
 patho <- Rhizo
@@ -182,38 +165,29 @@ patho
 patho.m <- melt(as.data.frame(patho), id.vars = "Bacteria")
 colnames(patho.m) <- c("Strain","Time","Growth")
 
-dfm <- data_summary(patho.m, varname="Growth", 
-                    groupnames=c("Strain", "Time"))
-rhizo.plot <- ggplot(dfm, aes(x=Time, y=Growth, group=Strain, color=Strain)) + 
-    geom_errorbar(aes(ymin=Growth-sd, ymax=Growth+sd), width=.1) +
-    geom_line() + geom_point() +ggtitle("Rsol") + theme(legend.position = "bottom") + ylab("")+ stat_compare_means(method = "anova", label.y = 60) + stat_compare_means(aes(label = ..p.signif..), method = "t.test", ref.group = "None")
-rhizo.plot
+rhizo.plot <- ggplot(patho.mse, aes(x=Time, y=mean, group=Strain, color=Strain)) +  geom_errorbar(aes(ymin=mean-sd, ymax=mean+sd), width=.1) + geom_line() + geom_point()+ theme(legend.position = "none") + ggtitle("Rsol") + theme(legend.position = "bottom") + ylab("")
 
 #Ncrassa
 patho <- Ncra
 patho.m <- melt(as.data.frame(patho), id.vars = "Bacteria")
 colnames(patho.m) <- c("Strain","Time","Growth")
+ncrassa.plot <- ggplot(patho.mse, aes(x=Time, y=mean, group=Strain, color=Strain)) + 
+    geom_errorbar(aes(ymin=mean-sd, ymax=mean+sd), width=.1) +
+    geom_line() + geom_point()+ ggtitle("Neurospora") +theme(legend.position = "none")+ylab("")
+ncrassa.plot
 
-dfm <- data_summary(patho.m, varname="Growth", 
-                    groupnames=c("Strain", "Time"))
-ncrassa.plot <- ggplot(dfm, aes(x=Time, y=Growth, group=Strain, color=Strain)) + 
-    geom_errorbar(aes(ymin=Growth-sd, ymax=Growth+sd), width=.1) +
-    geom_line() + geom_point()+ ggtitle("Neurospora") +theme(legend.position = "none")+ylab("")+ stat_compare_means(method = "anova", label.y = 60) + stat_compare_means(aes(label = ..p.signif..), method = "t.test", ref.group = "None")
+leg.plot <- ggplot(patho.mse, aes(x=Time, y=mean, group=Strain, color=Strain)) + 
+    geom_errorbar(aes(ymin=mean-sd, ymax=mean+sd), width=.1) +
+    geom_line() + geom_point()+ ggtitle("Neurospora") +theme(legend.position = "none")+ylab("")
 
-leg.plot <- ggplot(dfm, aes(x=Time, y=Growth, group=Strain, color=Strain)) + 
-    geom_errorbar(aes(ymin=Growth-sd, ymax=Growth+sd), width=.1) +
-    geom_line() + geom_point()+ ggtitle("Neurospora")
-leg.plot
 leg <- get_legend(leg.plot)
 
-as_ggplot(leg)
 
-leg
 ```
 
 ```{r pathos, echo=FALSE, warning=FALSE, out.width = "90%", fig.pos="H",fig.cap="Pathogenic fungi and their growth inhibtion with bacterial volatiles"}
-grid.newpage()
-grid.arrange(alternaria.plot, basidio.plot, ncrassa.plot, rhizo.plot, leg, nrow = 2, ncol=3,layout_matrix = rbind(c(1, 2, 4), c(3, 5, 4)))
+library(cowplot)
+plot_grid(alternaria.plot, basidio.plot, ncrassa.plot, rhizo.plot, leg, labels = c('A', 'B', 'C', 'D', 'E'), label_size = 12)
 
 ```
 
@@ -467,7 +441,7 @@ mSet<-PlotPCAScree(mSet, "pca_scree_2_", "png", 600, width=NA, 5)
 mSet<-PlotPCA2DScore(mSet, "pca_score2d_2_", "png", 600, width=NA, 1,2,0.95,0,0)
 mSet<-PlotPCALoading(mSet, "pca_loading_2_", "png", 600, width=NA, 1,2);
 mSet<-PlotPCABiplot(mSet, "pca_biplot_2_", "png", 600, width=NA, 1,2)
-mSet<-PlotPCA3DScoreImg(mSet, "pca_score3d_2_", "png", 72, width=NA, 1,2,3, 40)
+mSet<-PlotPCA3DScoreImg(mSet, "pca_score3d_2_", "png", 600, width=NA, 1,2,3, 40)
 #mSet<-PlotPCA3DLoading(mSet, "pca_loading3d_2_", "json", 1,2,3)
 mSet<-PlotHeatMap(mSet, "heatmap_2_", "png", 72, width=NA, "norm", "row", "euclidean", "ward.D","bwm", "overview", T, T, NA, T, F)
 mSet<-PlotSubHeatMap(mSet, "heatmap_3_", "png", 600, width=NA, "norm", "row", "euclidean", "ward.D","bwm", "tanova", 13, "overview", T, T, T, F)
@@ -515,7 +489,7 @@ dev.off
 
 
 ```{r pca, echo=FALSE, out.width = "90%", fig.pos="H",fig.cap="PCA plot showing variation amount samples of Bsub, Smar, and Spro"}
-knitr::include_graphics("pca_score3d_0_dpi600.png")
+knitr::include_graphics("pca_score3d_2_dpi600.png")
 ```
 ```{r meta_heat, echo=FALSE, out.width = "90%", fig.pos="H", fig.cap="Shows autoscaled volatiles and the production relative to each sample"}
 knitr::include_graphics("heatmap_3_dpi600.png")
@@ -525,12 +499,12 @@ knitr::include_graphics("heatmap_3_dpi600.png")
 knitr::include_graphics("heatmap_7_dpi72.png")
 ```
 
-```{r meta_anova, echo=FALSE, out.width = "90%", fig.pos="H", fig.cap="ANOVA results showing 95% confidence or higher 11 compounds differentially produced by Bacteria"}
+```{r asdf, echo=FALSE, out.width = "90%", fig.pos="H", fig.cap="ANOVA results showing 95% confidence or higher 11 compounds differentially produced by Bacteria"}
 knitr::include_graphics("aov_2_dpi600.png")
 ```
 
+```{r tempname, echo=FALSE, out.width = "90%", fig.pos = "H", fig.cap="Table of differentially produced volatiles"}
 
-```{r table2, echo=FALSE, message=FALSE, out.width = "100%", warning=FALSE, fig.pos = "H", fig.cap="Table of differentially produced volatiles"}
 anov_res <- read_excel("Volatile.xlsx", sheet = "ANOVA")
 anov_res <- as.data.frame(anov_res)
 
@@ -564,18 +538,6 @@ abund.plot
 
 
 
-```{r include=FALSE}
-straw <- read_excel("Volatile.xlsx", sheet = "Strawberry", range="A1:B13")
-
-straw.plot <- ggplot(straw, aes(x=State, y=Spores, fill=State)) + geom_boxplot() + stat_compare_means(method = "t.test", label.x="With Smar") + xlab("Condition") + theme(legend.position = "none")
-
-```
-
-```{r strawberry, out.width="90%", fig.cap=Spores recovered from strawberries innoculated with Rstol in the presence of S. marcescens}
-
-straw.plot
-```
-
 # Discussion:
 The biggest impact on the field. A reexamination of volatiles produced by Serratia marcescens reveals several antifungal compounds. An issue with 2-undecanone is that it has a very short halflife of 1.2 days [76].
 The context of impact within the field - Many studies are beginning to incorporate microbial communities into their work, the volatile profiles of these communities are at times neglected but can clearly play a major role. 
@@ -602,72 +564,72 @@ Searching for new antifungals is important. Looking to the future, volatile prof
 7. 	Partida-Martinez LP, Hertweck C. Pathogenic fungus harbours endosymbiotic bacteria for toxin production. Nature. 2005;437: 884–888.
 8. 	Uehling J, Gryganskyi A, Hameed K, Tschaplinski T, Misztal PK, Wu S, et al. Comparative genomics of Mortierella elongata and its bacterial endosymbiont Mycoavidus cysteinexigens. Environ Microbiol. 2017; doi:10.1111/1462-2920.13669
 9. 	Li Z, Yao Q, Dearth SP, Entler MR, Castro Gonzalez HF, Uehling JK, et al. Integrated proteomics and metabolomics suggests symbiotic metabolism and multimodal regulation in a fungal-endobacterial system. Environ Microbiol. 2017;19: 1041–1053.
-10. 	Desirò A, Hao Z, Liber JA, Benucci GMN, Lowry D, Roberson R, et al. Mycoplasma-related endobacteria within Mortierellomycotina fungi: diversity, distribution and functional insights into their lifestyle. ISME J. 2018;12: 1743–1757.
-11. 	Hoffman MT, Arnold AE. Diverse bacteria inhabit living hyphae of phylogenetically diverse fungal endophytes. Appl Environ Microbiol. 2010;76: 4063–4075.
-12. 	Partida-Martinez LP, Monajembashi S, Greulich K-O, Hertweck C. Endosymbiont-dependent host reproduction maintains bacterial-fungal mutualism. Curr Biol. 2007;17: 773–777.
-13. 	Shaffer JP, U’Ren JM, Gallery RE, Baltrus DA, Arnold AE. An Endohyphal Bacterium (Chitinophaga, Bacteroidetes) Alters Carbon Source Use by Fusarium keratoplasticum (F. solani Species Complex, Nectriaceae). Front Microbiol. 2017;8: 350.
-14. 	Pawlowska TE, Gaspar ML, Lastovetsky OA, Mondo SJ, Real-Ramirez I, Shakya E, et al. Biology of Fungi and Their Bacterial Endosymbionts. Annu Rev Phytopathol. 2018;56: 289–309.
-15. 	Deveau A, Bonito G, Uehling J, Paoletti M, Becker M, Bindschedler S, et al. Bacterial - Fungal Interactions: ecology, mechanisms and challenges. FEMS Microbiol Rev. 2018; doi:10.1093/femsre/fuy008
-16. 	Misztal PK, Lymperopoulou DS, Adams RI, Scott RA, Lindow SE, Bruns T, et al. Emission Factors of Microbial Volatile Organic Compounds from Environmental Bacteria and Fungi. Environ Sci Technol. 2018;52: 8272–8282.
-17. 	Nazir R, Warmink JA, Boersma H, van Elsas JD. Mechanisms that promote bacterial fitness in fungal-affected soil microhabitats. FEMS Microbiol Ecol. 2010;71: 169–185.
-18. 	Nazir R, Mazurier S, Yang P, Lemanceau P, van Elsas JD. The Ecological Role of Type Three Secretion Systems in the Interaction of Bacteria with Fungi in Soil and Related Habitats Is Diverse and Context-Dependent. Front Microbiol. 2017;8: 38.
-19. 	Warmink JA, Nazir R, Corten B, van Elsas JD. Hitchhikers on the fungal highway: The helper effect for bacterial migration via fungal hyphae. Soil Biol Biochem. 2011/4;43: 760–765.
-20. 	Frey-Klett P, Burlinson P, Deveau A, Barret M, Tarkka M, Sarniguet A. Bacterial-fungal interactions: hyphens between agricultural, clinical, environmental, and food microbiologists. Microbiol Mol Biol Rev. 2011;75: 583–609.
-21. 	Garbeva P, Hordijk C, Gerards S, de Boer W. Volatile-mediated interactions between phylogenetically different soil bacteria. Front Microbiol. 2014;5: 289.
-22. 	Kurze S, Bahl H, Dahl R, Berg G. Biological Control of Fungal Strawberry Diseases by Serratia plymuthica HRO-C48. Plant Dis. 2001;85: 529–534.
-23. 	Trunk K, Peltier J, Liu Y-C, Dill BD, Walker L, Gow NAR, et al. The type VI secretion system deploys antifungal effectors against microbial competitors. Nature Microbiology. 2018; 1.
-24. 	Spraker JE, Wiemann P, Baccile JA, Venkatesh N, Schumacher J, Schroeder FC, et al. Conserved Responses in a War of Small Molecules between a Plant-Pathogenic Bacterium and Fungi. MBio. 2018;9. doi:10.1128/mBio.00820-18
-25. 	Mannaa M, Oh JY, Kim KD. Biocontrol Activity of Volatile-Producing Bacillus megaterium and Pseudomonas protegens against Aspergillus flavus and Aflatoxin Production on Stored Rice Grains. Mycobiology. 2017;45: 213–219.
-26. 	Gao H, Li P, Xu X, Zeng Q, Guan W. Research on Volatile Organic Compounds From Bacillus subtilis CF-3: Biocontrol Effects on Fruit Fungal Pathogens and Dynamic Changes During Fermentation. Front Microbiol. 2018;9: 456.
-27. 	Machado AP, Anzai M, Fischman O. Bacillus subtilis induces morphological changes in Fonsecaea pedrosoi in vitro resulting in more resistant fungal forms in vivo. J Venom Anim Toxins Incl Trop Dis. 2010;16: 592–598.
-28. 	Minerdi D, Bossi S, Gullino ML, Garibaldi A. Volatile organic compounds: a potential direct long-distance mechanism for antagonistic action of Fusarium oxysporum strain MSA 35. Environ Microbiol. 2009;11: 844–854.
-29. 	Vespermann A, Kai M, Piechulla B. Rhizobacterial volatiles affect the growth of fungi and Arabidopsis thaliana. Appl Environ Microbiol. 2007;73: 5639–5641.
-30. 	Popova AA, Koksharova OA, Lipasova VA, Zaitseva JV, Katkova-Zhukotskaya OA, Eremina SI, et al. Inhibitory and Toxic Effects of Volatiles Emitted by Strains of Pseudomonas and Serratia on Growth and Survival of Selected Microorganisms, Caenorhabditis elegans, and Drosophila melanogaster. Biomed Res Int. 2014;2014. doi:10.1155/2014/125704
-31. 	Gkarmiri K, Finlay RD, Alström S, Thomas E, Cubeta MA, Högberg N. Transcriptomic changes in the plant pathogenic fungus Rhizoctonia solani AG-3 in response to the antagonistic bacteria Serratia proteamaculans and Serratia plymuthica. BMC Genomics. 2015;16: 630.
-32. 	Woodhams DC, LaBumbard BC, Barnhart KL, Becker MH, Bletz MC, Escobar LA, et al. Prodigiosin, Violacein, and Volatile Organic Compounds Produced by Widespread Cutaneous Bacteria of Amphibians Can Inhibit Two Batrachochytrium Fungal Pathogens. Microb Ecol. 2017; doi:10.1007/s00248-017-1095-7
-33. 	Using Serratia plymuthica to control fungal pathogens of plants. In: Loop [Internet]. [cited 25 Jun 2016]. Available: http://loop.frontiersin.org/publications/29877540
-34. 	Schmidt R, Jager V de, Zühlke D, Wolff C, Bernhardt J, Cankar K, et al. Fungal volatile compounds induce production of the secondary metabolite Sodorifen in Serratia plymuthica PRI-2C. Sci Rep. 2017;7: 862.
-35. 	Srobel G, Li JY, Sugawara F, Koshino H, Harper J, Hess WM. Oocydin A, a chlorinated macrocyclic lactone with potent anti-oomycete activity from Serratia marcescens. Microbiology. 1999;145 ( Pt 12): 3557–3564.
-36. 	Dhar Purkayastha G, Mangar P, Saha A, Saha D. Evaluation of the biocontrol efficacy of a Serratia marcescens strain indigenous to tea rhizosphere for the management of root rot disease in tea. PLoS One. 2018;13: e0191761.
-37. 	Hu W, Kuang F, Lu Z, Zhang N, Chen T. Killing Effects of an Isolated Serratia marcescens KH-001 on Diaphorina citri via Lowering the Endosymbiont Numbers. Front Microbiol. 2018;9: 860.
-38. 	Duzhak AB, Panfilova ZI, Duzhak TG, Vasyunina EA, Shternshis MV. Role of prodigiosin and chitinases in antagonistic activity of the bacterium Serratia marcescens against the fungus Didymella applanata. Biochemistry . 2012;77: 910–916.
-39. 	Someya N, Nakajima M, Watanabe K, Hibi T, Akutsu K. Potential of Serratia marcescens strain B2 for biological control of rice sheath blight. Biocontrol Sci Technol. 2005;15: 105–109.
-40. 	Ipcho S, Sundelin T, Erbs G, Kistler HC, Newman M-A, Olsson S. Fungal Innate Immunity Induced by Bacterial Microbe-Associated Molecular Patterns (MAMPs). G3 . 2016;6: 1585–1595.
-41. 	Soanes DM, Talbot NJ. Comparative Genome Analysis Reveals an Absence of Leucine-Rich Repeat Pattern-Recognition Receptor Proteins in the Kingdom Fungi. PLoS One. 2010;5: e12725.
-42. 	Wheatley RE. The consequences of volatile organic compound mediated bacterial and fungal interactions. Antonie Van Leeuwenhoek. 2002;81: 357–364.
-43. 	Schmidt R, Cordovez V, de Boer W, Raaijmakers J, Garbeva P. Volatile affairs in microbial interactions. ISME J. 2015;9: 2329–2335.
-44. 	Schulz-Bohm K, Martín-Sánchez L, Garbeva P. Microbial Volatiles: Small Molecules with an Important Role in Intra- and Inter-Kingdom Interactions. Front Microbiol. 2017;8: 2484.
-45. 	Ossowicki A, Jafra S, Garbeva P. The antimicrobial volatile power of the rhizospheric isolate Pseudomonas donghuensis P482. PLoS One. 2017;12: e0174362.
-46. 	Schmidt R, Etalo DW, de Jager V, Gerards S, Zweers H, de Boer W, et al. Microbial Small Talk: Volatiles in Fungal-Bacterial Interactions. Front Microbiol. 2015;6: 1495.
-47. 	Neupane S, Finlay RD, Alström S, Elfstrand M, Högberg N. Transcriptional responses of the bacterial antagonist Serratia plymuthica to the fungal phytopathogen Rhizoctonia solani. Environ Microbiol Rep. 2015;7: 123–127.
-48. 	Kai M, Crespo E, Cristescu SM, Harren FJM, Francke W, Piechulla B. Serratia odorifera: analysis of volatile emission and biological impact of volatile compounds on Arabidopsis thaliana. Appl Microbiol Biotechnol. 2010;88: 965–976.
-49. 	Hoffman MT, Gunatilaka MK, Wijeratne K, Gunatilaka L, Arnold AE. Endohyphal bacterium enhances production of indole-3-acetic acid by a foliar fungal endophyte. PLoS One. 2013;8: e73132.
-50. 	Taghavi T, Kim C, Rahemi A. Role of Natural Volatiles and Essential Oils in Extending Shelf Life and Controlling Postharvest Microorganisms of Small Fruits. Microorganisms. 2018;6. doi:10.3390/microorganisms6040104
-51. 	Kanchiswamy CN, Malnoy M, Maffei ME. Chemical diversity of microbial volatiles and their potential for plant growth and productivity. Front Plant Sci. 2015;6: 151.
-52. 	Lemfack MC, Gohlke B-O, Toguem SMT, Preissner S, Piechulla B, Preissner R. mVOC 2.0: a database of microbial volatiles. Nucleic Acids Res. 2018;46: D1261–D1265.
-53. 	Sharifi R, Ryu C-M. Sniffing bacterial volatile compounds for healthier plants. Curr Opin Plant Biol. 2018;44: 88–97.
-54. 	Minnich M. Behavior and determination of volatile organic compounds in soil: A literature review [Internet]. Lockheed Environmental Systems and Technologies Co., Las Vegas, NV (United States); 1993 May. Report No.: PB-94-100153/XAB. Available: https://www.osti.gov/biblio/5582173
-55. 	Ashelford KE, Fry JC, Bailey MJ, Day MJ. Characterization of Serratia isolates from soil, ecological implications and transfer of Serratia proteamaculans subsp. quinovora Grimont et al. 1983 to Serratia quinivorans corrig., sp. nov. Int J Syst Evol Microbiol. 2002;52: 2281–2289.
-56. 	De Vleesschauwer D, Höfte M. Using Serratia plymuthica to control fungal pathogens of plants. CAB Reviews. 2003; Available: https://biblio.ugent.be/publication/385377/file/582805
-57. 	Gutiérrez-Román MI, Holguín-Meléndez F, Bello-Mendoza R, Guillén-Navarro K, Dunn MF, Huerta-Palacios G. Production of prodigiosin and chitinases by tropical Serratia marcescens strains with potential to control plant pathogens. World J Microbiol Biotechnol. 2012;28: 145–153.
-58. 	Weise T, Thürmer A, Brady S, Kai M, Daniel R, Gottschalk G, et al. VOC emission of various Serratia species and isolates and genome analysis of Serratia plymuthica 4Rx13. FEMS Microbiol Lett. 2014;352: 45–53.
-59. 	Schulz S, Dickschat JS, Kunze B, Wagner-Dobler I, Diestel R, Sasse F. Biological activity of volatiles from marine and terrestrial bacteria. Mar Drugs. 2010;8: 2976–2987.
-60. 	Herrington PR, Craig JT, Chea CY, Sheridan JE. Inhibition of spore germination by volatiles from Streptomyces griseoruber. Soil Biol Biochem. 1985;17. Available: http://agris.fao.org/agris-search/search.do?recordID=US201301443033
-61. 	Khalid S, Baccile JA, Spraker JE, Tannous J, Imran M, Schroeder FC, et al. NRPS-Derived Isoquinolines and Lipopetides Mediate Antagonism between Plant Pathogenic Fungi and Bacteria. ACS Chem Biol. 2018;13: 171–179.
-62. 	Caballero Ortiz S, Trienens M, Pfohl K, Karlovsky P, Holighaus G, Rohlfs M. Phenotypic responses to microbial volatiles render a mold fungus more susceptible to insect damage. Ecol Evol. 2018;8: 4328–4339.
-63. 	Plyuta V, Lipasova V, Popova A, Koksharova O, Kuznetsov A, Szegedi E, et al. Influence of volatile organic compounds emitted by Pseudomonas and Serratia strains on Agrobacterium tumefaciens biofilms. APMIS. 2016;124: 586–594.
-64. 	Yu K, Hamilton-Kemp TR, Archbold DD, Collins RW, Newman MC. Volatile compounds from Escherichia coli O157:H7 and their absorption by strawberry fruit. J Agric Food Chem. 2000;48: 413–417.
-65. 	Groenhagen U, Baumgartner R, Bailly A, Gardiner A, Eberl L, Schulz S, et al. Production of bioactive volatiles by different Burkholderia ambifaria strains. J Chem Ecol. 2013;39: 892–906.
-66. 	Reddy DN, Al-Rajab AJ. Chemical composition, antibacterial and antifungal activities of Ruta graveolens L. volatile oils. Cogent Chemistry. 2016;2: 1220055.
-67. 	Giorgio A, De Stradis A, Lo Cantore P, Iacobellis NS. Biocide effects of volatile organic compounds produced by potential biocontrol rhizobacteria on Sclerotinia sclerotiorum. Front Microbiol. 2015;6: 1056.
-68. 	Bohbot JD, Dickens JC. Insect repellents: modulators of mosquito odorant receptor activity. PLoS One. 2010;5: e12138.
-69. 	Khan IA, Abourashed EA. Leung’s Encyclopedia of Common Natural Ingredients: Used in Food, Drugs and Cosmetics. Wiley; 2009.
-70. 	Mendes NS, Bitencourt TA, Sanches PR, Silva-Rocha R, Martinez-Rossi NM, Rossi A. Transcriptome-wide survey of gene expression changes and alternative splicing in Trichophyton rubrum in response to undecanoic acid. Sci Rep. 2018;8: 2520.
-71. 	Aryal SK, Carter-House D, Stajich JE, Dillman AR. Microbial associates of the southern mole cricket (Scapteriscus borellii) are highly pathogenic. J Invertebr Pathol. 2017;150: 54–62.
-72. 	Na F. Identification of Two Novel Fungal Species Associated with Kuroshio Shot Hole Borer (Euwallacea sp.) and Evaluation of Novel Biological Control Method to Inhibit the Fungal Associates of the Invasive Ambrosia Beetle Species in California [Internet]. UC Riverside. 2016. Available: https://escholarship.org/uc/item/8394m1k0
-73. 	Benny GL. Methods Used by Dr. R. K. Benjamin, and Other Mycologists, to Isolate Zygomycetes. Aliso: A Journal of Systematic and Evolutionary Botany. 2008;26: 37–61.
-74. 	Chong J, Yamamoto M, Xia J. MetaboAnalystR 2.0: From Raw Spectra to Biological Insights. Metabolites. 2019;9. doi:10.3390/metabo9030057
-75. 	Chong J, Xia J. MetaboAnalystR: an R package for flexible and reproducible analysis of metabolomics data. Bioinformatics. 2018;34: 4313–4314.
-76. 	TOXNET. In: NIH Toxicology Data Network [Internet]. 30 Aug 2006 [cited 6 Sep 2019]. Available: https://toxnet.nlm.nih.gov/cgi-bin/sis/search2/r?dbs+hsdb:@term+@rn+@rel+112-12-9
+10. Desirò A, Hao Z, Liber JA, Benucci GMN, Lowry D, Roberson R, et al. Mycoplasma-related endobacteria within Mortierellomycotina fungi: diversity, distribution and functional insights into their lifestyle. ISME J. 2018;12: 1743–1757.
+11. Hoffman MT, Arnold AE. Diverse bacteria inhabit living hyphae of phylogenetically diverse fungal endophytes. Appl Environ Microbiol. 2010;76: 4063–4075.
+12. Partida-Martinez LP, Monajembashi S, Greulich K-O, Hertweck C. Endosymbiont-dependent host reproduction maintains bacterial-fungal mutualism. Curr Biol. 2007;17: 773–777.
+13. Shaffer JP, U’Ren JM, Gallery RE, Baltrus DA, Arnold AE. An Endohyphal Bacterium (Chitinophaga, Bacteroidetes) Alters Carbon Source Use by Fusarium keratoplasticum (F. solani Species Complex, Nectriaceae). Front Microbiol. 2017;8: 350.
+14. Pawlowska TE, Gaspar ML, Lastovetsky OA, Mondo SJ, Real-Ramirez I, Shakya E, et al. Biology of Fungi and Their Bacterial Endosymbionts. Annu Rev Phytopathol. 2018;56: 289–309.
+15. Deveau A, Bonito G, Uehling J, Paoletti M, Becker M, Bindschedler S, et al. Bacterial - Fungal Interactions: ecology, mechanisms and challenges. FEMS Microbiol Rev. 2018; doi:10.1093/femsre/fuy008
+16. Misztal PK, Lymperopoulou DS, Adams RI, Scott RA, Lindow SE, Bruns T, et al. Emission Factors of Microbial Volatile Organic Compounds from Environmental Bacteria and Fungi. Environ Sci Technol. 2018;52: 8272–8282.
+17. Nazir R, Warmink JA, Boersma H, van Elsas JD. Mechanisms that promote bacterial fitness in fungal-affected soil microhabitats. FEMS Microbiol Ecol. 2010;71: 169–185.
+18. Nazir R, Mazurier S, Yang P, Lemanceau P, van Elsas JD. The Ecological Role of Type Three Secretion Systems in the Interaction of Bacteria with Fungi in Soil and Related Habitats Is Diverse and Context-Dependent. Front Microbiol. 2017;8: 38.
+19. Warmink JA, Nazir R, Corten B, van Elsas JD. Hitchhikers on the fungal highway: The helper effect for bacterial migration via fungal hyphae. Soil Biol Biochem. 2011/4;43: 760–765.
+20. Frey-Klett P, Burlinson P, Deveau A, Barret M, Tarkka M, Sarniguet A. Bacterial-fungal interactions: hyphens between agricultural, clinical, environmental, and food microbiologists. Microbiol Mol Biol Rev. 2011;75: 583–609.
+21. Garbeva P, Hordijk C, Gerards S, de Boer W. Volatile-mediated interactions between phylogenetically different soil bacteria. Front Microbiol. 2014;5: 289.
+22. Kurze S, Bahl H, Dahl R, Berg G. Biological Control of Fungal Strawberry Diseases by Serratia plymuthica HRO-C48. Plant Dis. 2001;85: 529–534.
+23. Trunk K, Peltier J, Liu Y-C, Dill BD, Walker L, Gow NAR, et al. The type VI secretion system deploys antifungal effectors against microbial competitors. Nature Microbiology. 2018; 1.
+24. Spraker JE, Wiemann P, Baccile JA, Venkatesh N, Schumacher J, Schroeder FC, et al. Conserved Responses in a War of Small Molecules between a Plant-Pathogenic Bacterium and Fungi. MBio. 2018;9. doi:10.1128/mBio.00820-18
+25. Mannaa M, Oh JY, Kim KD. Biocontrol Activity of Volatile-Producing Bacillus megaterium and Pseudomonas protegens against Aspergillus flavus and Aflatoxin Production on Stored Rice Grains. Mycobiology. 2017;45: 213–219.
+26. Gao H, Li P, Xu X, Zeng Q, Guan W. Research on Volatile Organic Compounds From Bacillus subtilis CF-3: Biocontrol Effects on Fruit Fungal Pathogens and Dynamic Changes During Fermentation. Front Microbiol. 2018;9: 456.
+27. Machado AP, Anzai M, Fischman O. Bacillus subtilis induces morphological changes in Fonsecaea pedrosoi in vitro resulting in more resistant fungal forms in vivo. J Venom Anim Toxins Incl Trop Dis. 2010;16: 592–598.
+28. Minerdi D, Bossi S, Gullino ML, Garibaldi A. Volatile organic compounds: a potential direct long-distance mechanism for antagonistic action of Fusarium oxysporum strain MSA 35. Environ Microbiol. 2009;11: 844–854.
+29. Vespermann A, Kai M, Piechulla B. Rhizobacterial volatiles affect the growth of fungi and Arabidopsis thaliana. Appl Environ Microbiol. 2007;73: 5639–5641.
+30. Popova AA, Koksharova OA, Lipasova VA, Zaitseva JV, Katkova-Zhukotskaya OA, Eremina SI, et al. Inhibitory and Toxic Effects of Volatiles Emitted by Strains of Pseudomonas and Serratia on Growth and Survival of Selected Microorganisms, Caenorhabditis elegans, and Drosophila melanogaster. Biomed Res Int. 2014;2014. doi:10.1155/2014/125704
+31. Gkarmiri K, Finlay RD, Alström S, Thomas E, Cubeta MA, Högberg N. Transcriptomic changes in the plant pathogenic fungus Rhizoctonia solani AG-3 in response to the antagonistic bacteria Serratia proteamaculans and Serratia plymuthica. BMC Genomics. 2015;16: 630.
+32. Woodhams DC, LaBumbard BC, Barnhart KL, Becker MH, Bletz MC, Escobar LA, et al. Prodigiosin, Violacein, and Volatile Organic Compounds Produced by Widespread Cutaneous Bacteria of Amphibians Can Inhibit Two Batrachochytrium Fungal Pathogens. Microb Ecol. 2017; doi:10.1007/s00248-017-1095-7
+33. Using Serratia plymuthica to control fungal pathogens of plants. In: Loop [Internet]. [cited 25 Jun 2016]. Available: http://loop.frontiersin.org/publications/29877540
+34. Schmidt R, Jager V de, Zühlke D, Wolff C, Bernhardt J, Cankar K, et al. Fungal volatile compounds induce production of the secondary metabolite Sodorifen in Serratia plymuthica PRI-2C. Sci Rep. 2017;7: 862.
+35. Srobel G, Li JY, Sugawara F, Koshino H, Harper J, Hess WM. Oocydin A, a chlorinated macrocyclic lactone with potent anti-oomycete activity from Serratia marcescens. Microbiology. 1999;145 ( Pt 12): 3557–3564.
+36. Dhar Purkayastha G, Mangar P, Saha A, Saha D. Evaluation of the biocontrol efficacy of a Serratia marcescens strain indigenous to tea rhizosphere for the management of root rot disease in tea. PLoS One. 2018;13: e0191761.
+37. Hu W, Kuang F, Lu Z, Zhang N, Chen T. Killing Effects of an Isolated Serratia marcescens KH-001 on Diaphorina citri via Lowering the Endosymbiont Numbers. Front Microbiol. 2018;9: 860.
+38. Duzhak AB, Panfilova ZI, Duzhak TG, Vasyunina EA, Shternshis MV. Role of prodigiosin and chitinases in antagonistic activity of the bacterium Serratia marcescens against the fungus Didymella applanata. Biochemistry . 2012;77: 910–916.
+39. Someya N, Nakajima M, Watanabe K, Hibi T, Akutsu K. Potential of Serratia marcescens strain B2 for biological control of rice sheath blight. Biocontrol Sci Technol. 2005;15: 105–109.
+40. Ipcho S, Sundelin T, Erbs G, Kistler HC, Newman M-A, Olsson S. Fungal Innate Immunity Induced by Bacterial Microbe-Associated Molecular Patterns (MAMPs). G3 . 2016;6: 1585–1595.
+41. Soanes DM, Talbot NJ. Comparative Genome Analysis Reveals an Absence of Leucine-Rich Repeat Pattern-Recognition Receptor Proteins in the Kingdom Fungi. PLoS One. 2010;5: e12725.
+42. Wheatley RE. The consequences of volatile organic compound mediated bacterial and fungal interactions. Antonie Van Leeuwenhoek. 2002;81: 357–364.
+43. Schmidt R, Cordovez V, de Boer W, Raaijmakers J, Garbeva P. Volatile affairs in microbial interactions. ISME J. 2015;9: 2329–2335.
+44. Schulz-Bohm K, Martín-Sánchez L, Garbeva P. Microbial Volatiles: Small Molecules with an Important Role in Intra- and Inter-Kingdom Interactions. Front Microbiol. 2017;8: 2484.
+45. Ossowicki A, Jafra S, Garbeva P. The antimicrobial volatile power of the rhizospheric isolate Pseudomonas donghuensis P482. PLoS One. 2017;12: e0174362.
+46. Schmidt R, Etalo DW, de Jager V, Gerards S, Zweers H, de Boer W, et al. Microbial Small Talk: Volatiles in Fungal-Bacterial Interactions. Front Microbiol. 2015;6: 1495.
+47. Neupane S, Finlay RD, Alström S, Elfstrand M, Högberg N. Transcriptional responses of the bacterial antagonist Serratia plymuthica to the fungal phytopathogen Rhizoctonia solani. Environ Microbiol Rep. 2015;7: 123–127.
+48. Kai M, Crespo E, Cristescu SM, Harren FJM, Francke W, Piechulla B. Serratia odorifera: analysis of volatile emission and biological impact of volatile compounds on Arabidopsis thaliana. Appl Microbiol Biotechnol. 2010;88: 965–976.
+49. Hoffman MT, Gunatilaka MK, Wijeratne K, Gunatilaka L, Arnold AE. Endohyphal bacterium enhances production of indole-3-acetic acid by a foliar fungal endophyte. PLoS One. 2013;8: e73132.
+50. Taghavi T, Kim C, Rahemi A. Role of Natural Volatiles and Essential Oils in Extending Shelf Life and Controlling Postharvest Microorganisms of Small Fruits. Microorganisms. 2018;6. doi:10.3390/microorganisms6040104
+51. Kanchiswamy CN, Malnoy M, Maffei ME. Chemical diversity of microbial volatiles and their potential for plant growth and productivity. Front Plant Sci. 2015;6: 151.
+52. Lemfack MC, Gohlke B-O, Toguem SMT, Preissner S, Piechulla B, Preissner R. mVOC 2.0: a database of microbial volatiles. Nucleic Acids Res. 2018;46: D1261–D1265.
+53. Sharifi R, Ryu C-M. Sniffing bacterial volatile compounds for healthier plants. Curr Opin Plant Biol. 2018;44: 88–97.
+54. Minnich M. Behavior and determination of volatile organic compounds in soil: A literature review [Internet]. Lockheed Environmental Systems and Technologies Co., Las Vegas, NV (United States); 1993 May. Report No.: PB-94-100153/XAB. Available: https://www.osti.gov/biblio/5582173
+55. Ashelford KE, Fry JC, Bailey MJ, Day MJ. Characterization of Serratia isolates from soil, ecological implications and transfer of Serratia proteamaculans subsp. quinovora Grimont et al. 1983 to Serratia quinivorans corrig., sp. nov. Int J Syst Evol Microbiol. 2002;52: 2281–2289.
+56. De Vleesschauwer D, Höfte M. Using Serratia plymuthica to control fungal pathogens of plants. CAB Reviews. 2003; Available: https://biblio.ugent.be/publication/385377/file/582805
+57. Gutiérrez-Román MI, Holguín-Meléndez F, Bello-Mendoza R, Guillén-Navarro K, Dunn MF, Huerta-Palacios G. Production of prodigiosin and chitinases by tropical Serratia marcescens strains with potential to control plant pathogens. World J Microbiol Biotechnol. 2012;28: 145–153.
+58. Weise T, Thürmer A, Brady S, Kai M, Daniel R, Gottschalk G, et al. VOC emission of various Serratia species and isolates and genome analysis of Serratia plymuthica 4Rx13. FEMS Microbiol Lett. 2014;352: 45–53.
+59. Schulz S, Dickschat JS, Kunze B, Wagner-Dobler I, Diestel R, Sasse F. Biological activity of volatiles from marine and terrestrial bacteria. Mar Drugs. 2010;8: 2976–2987.
+60. Herrington PR, Craig JT, Chea CY, Sheridan JE. Inhibition of spore germination by volatiles from Streptomyces griseoruber. Soil Biol Biochem. 1985;17. Available: http://agris.fao.org/agris-search/search.do?recordID=US201301443033
+61. Khalid S, Baccile JA, Spraker JE, Tannous J, Imran M, Schroeder FC, et al. NRPS-Derived Isoquinolines and Lipopetides Mediate Antagonism between Plant Pathogenic Fungi and Bacteria. ACS Chem Biol. 2018;13: 171–179.
+62. Caballero Ortiz S, Trienens M, Pfohl K, Karlovsky P, Holighaus G, Rohlfs M. Phenotypic responses to microbial volatiles render a mold fungus more susceptible to insect damage. Ecol Evol. 2018;8: 4328–4339.
+63. Plyuta V, Lipasova V, Popova A, Koksharova O, Kuznetsov A, Szegedi E, et al. Influence of volatile organic compounds emitted by Pseudomonas and Serratia strains on Agrobacterium tumefaciens biofilms. APMIS. 2016;124: 586–594.
+64. Yu K, Hamilton-Kemp TR, Archbold DD, Collins RW, Newman MC. Volatile compounds from Escherichia coli O157:H7 and their absorption by strawberry fruit. J Agric Food Chem. 2000;48: 413–417.
+65. Groenhagen U, Baumgartner R, Bailly A, Gardiner A, Eberl L, Schulz S, et al. Production of bioactive volatiles by different Burkholderia ambifaria strains. J Chem Ecol. 2013;39: 892–906.
+66. Reddy DN, Al-Rajab AJ. Chemical composition, antibacterial and antifungal activities of Ruta graveolens L. volatile oils. Cogent Chemistry. 2016;2: 1220055.
+67. Giorgio A, De Stradis A, Lo Cantore P, Iacobellis NS. Biocide effects of volatile organic compounds produced by potential biocontrol rhizobacteria on Sclerotinia sclerotiorum. Front Microbiol. 2015;6: 1056.
+68. Bohbot JD, Dickens JC. Insect repellents: modulators of mosquito odorant receptor activity. PLoS One. 2010;5: e12138.
+69. Khan IA, Abourashed EA. Leung’s Encyclopedia of Common Natural Ingredients: Used in Food, Drugs and Cosmetics. Wiley; 2009.
+70. Mendes NS, Bitencourt TA, Sanches PR, Silva-Rocha R, Martinez-Rossi NM, Rossi A. Transcriptome-wide survey of gene expression changes and alternative splicing in Trichophyton rubrum in response to undecanoic acid. Sci Rep. 2018;8: 2520.
+71. Aryal SK, Carter-House D, Stajich JE, Dillman AR. Microbial associates of the southern mole cricket (Scapteriscus borellii) are highly pathogenic. J Invertebr Pathol. 2017;150: 54–62.
+72. Na F. Identification of Two Novel Fungal Species Associated with Kuroshio Shot Hole Borer (Euwallacea sp.) and Evaluation of Novel Biological Control Method to Inhibit the Fungal Associates of the Invasive Ambrosia Beetle Species in California [Internet]. UC Riverside. 2016. Available: https://escholarship.org/uc/item/8394m1k0
+73. Benny GL. Methods Used by Dr. R. K. Benjamin, and Other Mycologists, to Isolate Zygomycetes. Aliso: A Journal of Systematic and Evolutionary Botany. 2008;26: 37–61.
+74. Chong J, Yamamoto M, Xia J. MetaboAnalystR 2.0: From Raw Spectra to Biological Insights. Metabolites. 2019;9. doi:10.3390/metabo9030057
+75. Chong J, Xia J. MetaboAnalystR: an R package for flexible and reproducible analysis of metabolomics data. Bioinformatics. 2018;34: 4313–4314.
+76. TOXNET. In: NIH Toxicology Data Network [Internet]. 30 Aug 2006 [cited 6 Sep 2019]. Available: https://toxnet.nlm.nih.gov/cgi-bin/sis/search2/r?dbs+hsdb:@term+@rn+@rel+112-12-9
 
 
