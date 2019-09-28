@@ -26,6 +26,7 @@ library(float)
 library(kableExtra)
 library(ggpubr)
 library(plyr)
+library(tiff)
 options(tinytex.verbose = TRUE)
 ```
 \newpage
@@ -389,6 +390,7 @@ legend(x="bottomleft", legend=unique(treat), col=c("red", "blue", "green"), pch=
 ```
 
 ```{r metabolanalyst_nooutliers, echo=FALSE, include=FALSE}
+
 metanr_packages <- function(){
   
 metr_pkgs <- c("Rserve", "ellipse", "scatterplot3d", "Cairo", "randomForest", "caTools", "e1071", "som", "impute", "pcaMethods", "RJSONIO", "ROCR", "globaltest", "GlobalAncova", "Rgraphviz", "preprocessCore", "genefilter", "pheatmap", "SSPA", "sva", "Rcpp", "pROC", "data.table", "limma", "car", "fitdistrplus", "lars", "Hmisc", "magrittr", "methods", "xtable", "pls", "caret", "lattice", "igraph", "gplots", "KEGGgraph", "reshape", "RColorBrewer", "tibble", "siggenes", "plotly", "xcms", "CAMERA", "fgsea", "MSnbase", "BiocParallel", "metap", "reshape2", "scales")
@@ -468,8 +470,6 @@ benzyl<-PlotCmpdView(mSet, "Benzyl alcohol", "png", 72, width=NA)
 cyclopenta<-PlotCmpdView(mSet, "Cyclopentasiloxane, decamethyl-", "png", 72, width=NA)
 dmts<-PlotCmpdView(mSet, "Dimethyl trisulfide", "png", 72, width=NA)
 
-
-
 img1 <-  rasterGrob(as.raster(readPNG("2-Acetylthiazole_dpi72.png")), interpolate = FALSE)
 img2 <-  rasterGrob(as.raster(readPNG("Dimethyl trisulfide_dpi72.png")), interpolate = FALSE)
 img3 <-  rasterGrob(as.raster(readPNG("2-Dodecanone_dpi72.png")), interpolate = FALSE)
@@ -536,7 +536,24 @@ abund.plot = ggplot(abund.m, aes(x=Compound, y=abund.m$value, fill=Compound)) + 
 abund.plot 
 ```
 
+```{r microscopy, echo=FALSE, out.width="90%", fig.cap="Panel of Microscope images"}
 
+micro_con <- rasterGrob(as.raster(readPNG("images/40x_con_6.png")), interpolate = FALSE)
+micro_dmpz <-  rasterGrob(as.raster(readPNG("images/40x_dmpz_7.png")), interpolate = FALSE)
+micro_und <-  rasterGrob(as.raster(readPNG("images/40x_und_5.png")), interpolate = FALSE)
+micro_an <-  rasterGrob(as.raster(readPNG("images/40x_An_1.png")), interpolate = FALSE)
+micro_dmts <-  rasterGrob(as.raster(readPNG("images/40x_DMTS_7.png")), interpolate = FALSE)
+
+library(cowplot)
+plot_grid(micro_con, micro_dmpz, micro_und, micro_an, micro_dmts, labels = c('A', 'B', 'C', 'D', 'E'), label_size = 12)
+title = cowplot::ggdraw() + cowplot::draw_label("40X "~italic(Rhizopus)~ " Hyphae Exposed to Volatiles", size = 20)
+top_row = cowplot::plot_grid(micro_con, micro_dmpz, micro_und, labels = c('A', 'B', 'C'), label_size = 12, ncol=3)
+bottom_row = cowplot::plot_grid(micro_an, micro_dmts, labels = c('D', 'E'),label_size = 12, ncol=2)
+
+cowplot::plot_grid(title, top_row, bottom_row, ncol=1)
+```
+
+```
 
 # Discussion:
 The biggest impact on the field. A reexamination of volatiles produced by Serratia marcescens reveals several antifungal compounds. An issue with 2-undecanone is that it has a very short halflife of 1.2 days [76].
