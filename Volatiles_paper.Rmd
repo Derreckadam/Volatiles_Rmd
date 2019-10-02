@@ -134,10 +134,10 @@ straw.plot
 #Pathogens Inhbition
 #Fungal data with S. pro, S. mar, and B. subtilis
 
-Basidi<- read_excel("Volatile.xlsx", sheet = "Basidi", range="A1:D10")
+Basidi<- read_excel("Volatile.xlsx", sheet = "Basidi", range="A1:D13")
 Alt<- read_excel("Volatile.xlsx", sheet = "Alt", range="A1:D10")
-Rhizo<- read_excel("Volatile.xlsx", sheet = "Rhizo", range="A1:D12")
-Ncra<- read_excel("Volatile.xlsx", sheet = "Ncrassa_donut", range="A1:D10")
+Rhizo<- read_excel("Volatile.xlsx", sheet = "Rhizo", range="A1:D16")
+Ncra<- read_excel("Volatile.xlsx", sheet = "Ncrassa_donut", range="A1:D14")
 
 #basidiobolus
 patho <- Basidi
