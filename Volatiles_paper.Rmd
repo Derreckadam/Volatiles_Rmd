@@ -7,6 +7,8 @@ output:
     keep_tex: yes
     toc: yes
     latex_engine: xelatex
+editor_options: 
+  chunk_output_type: inline
 ---
 
 
@@ -28,6 +30,7 @@ library(ggpubr)
 library(plyr)
 library(tiff)
 options(tinytex.verbose = TRUE)
+
 ```
 \newpage
 
@@ -86,7 +89,7 @@ grid.arrange(streak, dount, ncol = 2)
 #Rhizopus data with on S. pro, S. mar, and B. subtilis
 
 # Get Rhizopus data with many strains (48 Hour incubation)
-timelap <- read_excel("Volatile.xlsx", sheet = "Serratia Multistrain Analysis")
+timelap <- read_excel("./Data_in/Volatile.xlsx", sheet = "Serratia Multistrain Analysis")
 
 # Rhizopus name ordering
 names.data <- unique(timelap$Strain)
@@ -110,76 +113,77 @@ final.data <- as.data.frame(do.call(rbind, Strain.list))
 rownames(final.data) <- NULL
 final.data
 pd <- position_dodge(1)
-timelap.bar <- ggplot(final.data, aes(x=Time, y=mean, fill=Strain)) + geom_bar(stat="identity", position=pd) + geom_errorbar(aes(ymin=mean-sd, ymax=mean+sd), width=.1, position=pd) + xlab("Time (Hours)") + ylab("Mycelial growth (cm^2)") + theme_classic()
+timelap.bar <- ggplot(final.data, aes(x=Time, y=mean, fill=Strain)) + geom_bar(stat="identity", position=pd) + geom_errorbar(aes(ymin=mean-sd, ymax=mean+sd), width=.1, position=pd) + xlab("Bacterial Incubation Time (Hours) Before Rstol Innoculation") + ylab("Mycelial growth (cm^2) of Rstol") + theme_classic() + ggtitle("48 Hours of Bacterial Growth is Sufficent to Inhibit Rstol Mycelial Growth")
 
 ```
 
 ```{r timelapse, echo=FALSE, warning=FALSE, out.width = "90%", fig.pos="H",fig.cap="Figure 1: We tested the ability of various strains of bacteria to inhibit fungal growth at 0, 24, and 48 hours"}
 timelap.bar
+
+png("R-plots/time_assay.png", width = 800)
+timelap.bar
+dev.off
+
 ```
 
 ```{r include=FALSE}
-straw <- read_excel("Volatile.xlsx", sheet = "Strawberry", range="A1:B13")
+straw <- read_excel("./Data_in/Volatile.xlsx", sheet = "Strawberry", range="A1:B13")
 
-straw.plot <- ggplot(straw, aes(x=State, y=Spores, fill=State)) + geom_boxplot() + stat_compare_means(method = "t.test", label.x="With Smar") + xlab("Condition") + theme(legend.position = "none")
+straw.plot <- ggplot(straw, aes(x=State, y=Spores, fill=State)) + geom_boxplot() + stat_compare_means(method = "t.test", label.x="With Smar") + xlab("Condition") + theme(legend.position = "none") + ggtitle("Smar Reduces Spore Production in Rstol")
 
 ```
 
 ```{r strawberry, echo=FALSE, out.width="90%", fig.cap="Spores recovered from strawberries innoculated with Rstol in the presence of S. marcescens"}
-
 straw.plot
+png("R-plots/StrawSpore.png")
+straw.plot
+dev.off()
 ```
 
 ```{r include=FALSE}
 #Pathogens Inhbition
 #Fungal data with S. pro, S. mar, and B. subtilis
 
-Basidi<- read_excel("Volatile.xlsx", sheet = "Basidi", range="A1:D13")
-Alt<- read_excel("Volatile.xlsx", sheet = "Alt", range="A1:D10")
-Rhizo<- read_excel("Volatile.xlsx", sheet = "Rhizo", range="A1:D16")
-Ncra<- read_excel("Volatile.xlsx", sheet = "Ncrassa_donut", range="A1:D14")
+Mucor<- read_excel("./Data_in/Volatile.xlsx", sheet = "Mucor")
+AF<- read_excel("./Data_in/Volatile.xlsx", sheet = "AF")
+Rhizo<- read_excel("./Data_in/Volatile.xlsx", sheet = "Rhizo")
+Ncra<- read_excel("./Data_in/Volatile.xlsx", sheet = "Ncrassa")
 
-#basidiobolus
-patho <- Basidi
-patho.m <- melt(as.data.frame(patho), id.vars = "Bacteria")
-colnames(patho.m) <- c("Strain","Time","Growth")
+#M circenelloides
+Mucor.m <- melt(as.data.frame(Mucor), id.vars = "Condition")
+colnames(Mucor.m) <- c("Strain","Time","Growth")
+Mucor.mse <- ddply(Mucor.m, c("Strain","Time") , summarise, N = length(Growth), mean = mean(Growth), sd   = sd(Growth), se   = sd / sqrt(N))
 
-patho.mse <- ddply(patho.m, c("Strain","Time") , summarise, N = length(Growth), mean = mean(Growth), sd   = sd(Growth), se   = sd / sqrt(N))
-patho.mse
-
-basidio.plot <- ggplot(patho.mse, aes(x=Time, y=mean, group=Strain, color=Strain)) + geom_errorbar(aes(ymin=mean-sd, ymax=mean+sd), width=.1) +geom_line() + geom_point()+ theme(legend.position = "none")+ ggtitle("Basidiobolus") +ylab("")
-
-basidio.plot
+Mucor.plot <- ggplot(Mucor.mse, aes(x=Time, y=mean, group=Strain, color=Strain)) + geom_errorbar(aes(ymin=mean-sd, ymax=mean+sd), width=.1) +geom_line() + geom_point()+ theme(legend.position = "none")+ ggtitle(expression(italic("Mucor"))) +ylab("")+ xlab("")
 
 
 
-#Alternaria
-patho <- Alt
-patho.m <- melt(as.data.frame(patho), id.vars = "Bacteria")
-colnames(patho.m) <- c("Strain","Time","Growth")
-
-alternaria.plot <- ggplot(patho.mse, aes(x=Time, y=mean, group=Strain, color=Strain)) + geom_errorbar(aes(ymin=mean-sd, ymax=mean+sd), width=.1) +geom_line() + geom_point()+ theme(legend.position = "none")+ ggtitle("Alternaria")+ ylab("Percent Petri Dish")
+#Aspergillus
+AF.m <- melt(as.data.frame(AF), id.vars = "Condition")
+colnames(AF.m) <- c("Strain","Time","Growth")
+AF.mse <- ddply(AF.m, c("Strain","Time") , summarise, N = length(Growth), mean = mean(Growth), sd   = sd(Growth), se   = sd / sqrt(N))
+AF.plot <- ggplot(AF.mse, aes(x=Time, y=mean, group=Strain, color=Strain)) + geom_errorbar(aes(ymin=mean-sd, ymax=mean+sd), width=.1) +geom_line() + geom_point()+ theme(legend.position = "none")+ ggtitle(expression(italic("Aspergillus")))+ ylab("Percent Petri Dish")
 
 #Rhizo
-patho <- Rhizo
-patho
-patho.m <- melt(as.data.frame(patho), id.vars = "Bacteria")
-colnames(patho.m) <- c("Strain","Time","Growth")
-
-rhizo.plot <- ggplot(patho.mse, aes(x=Time, y=mean, group=Strain, color=Strain)) +  geom_errorbar(aes(ymin=mean-sd, ymax=mean+sd), width=.1) + geom_line() + geom_point()+ theme(legend.position = "none") + ggtitle("Rsol") + theme(legend.position = "bottom") + ylab("")
+Rhizo.m <- melt(as.data.frame(Rhizo), id.vars = "Condition")
+colnames(Rhizo.m) <- c("Strain","Time","Growth")
+Rhizo.mse <- ddply(Rhizo.m, c("Strain","Time") , summarise, N = length(Growth), mean = mean(Growth), sd   = sd(Growth), se   = sd / sqrt(N))
+rhizo.plot <- ggplot(Rhizo.mse, aes(x=Time, y=mean, group=Strain, color=Strain)) +  geom_errorbar(aes(ymin=mean-sd, ymax=mean+sd), width=.1) + geom_line() + geom_point()+ theme(legend.position = "none") + ggtitle("Rstol") + theme(legend.position = "none") + ylab("") + xlab("")
 
 #Ncrassa
-patho <- Ncra
-patho.m <- melt(as.data.frame(patho), id.vars = "Bacteria")
-colnames(patho.m) <- c("Strain","Time","Growth")
-ncrassa.plot <- ggplot(patho.mse, aes(x=Time, y=mean, group=Strain, color=Strain)) + 
-    geom_errorbar(aes(ymin=mean-sd, ymax=mean+sd), width=.1) +
-    geom_line() + geom_point()+ ggtitle("Neurospora") +theme(legend.position = "none")+ylab("")
-ncrassa.plot
+Ncra.m <- melt(as.data.frame(Ncra), id.vars = "Condition")
+colnames(Ncra.m) <- c("Strain","Time","Growth")
 
-leg.plot <- ggplot(patho.mse, aes(x=Time, y=mean, group=Strain, color=Strain)) + 
+Ncra.mse <- ddply(Ncra.m, c("Strain","Time") , summarise, N = length(Growth), mean = mean(Growth), sd   = sd(Growth), se   = sd / sqrt(N))
+
+ncrassa.plot <- ggplot(Ncra.mse, aes(x=Time, y=mean, group=Strain, color=Strain)) + 
     geom_errorbar(aes(ymin=mean-sd, ymax=mean+sd), width=.1) +
-    geom_line() + geom_point()+ ggtitle("Neurospora") +theme(legend.position = "none")+ylab("")
+    geom_line() + geom_point()+ ggtitle(expression(italic("Neurospora"))) +theme(legend.position = "none")+ylab("")+ xlab("")
+
+
+leg.plot <- ggplot(Ncra.mse, aes(x=Time, y=mean, group=Strain, color=Strain)) + 
+    geom_errorbar(aes(ymin=mean-sd, ymax=mean+sd), width=.1) +
+    geom_line() + geom_point()+ ggtitle("Neurospora") +theme(legend.position = "bottom")+ylab("")
 
 leg <- get_legend(leg.plot)
 
@@ -188,205 +192,111 @@ leg <- get_legend(leg.plot)
 
 ```{r pathos, echo=FALSE, warning=FALSE, out.width = "90%", fig.pos="H",fig.cap="Pathogenic fungi and their growth inhibtion with bacterial volatiles"}
 library(cowplot)
-plot_grid(alternaria.plot, basidio.plot, ncrassa.plot, rhizo.plot, leg, labels = c('A', 'B', 'C', 'D', 'E'), label_size = 12)
-
+fungi_grid <- plot_grid(AF.plot, Mucor.plot, ncrassa.plot, rhizo.plot, labels = c('A', 'B', 'C', 'D'), ncol = 2)
+plot_grid(fungi_grid, leg, ncol = 1, rel_heights = c(1, .1))
+png("./R-plots/OtherFungi.png")
+plot_grid(fungi_grid, leg, ncol = 1, rel_heights = c(1, .1))
+dev.off()
 ```
 
 ```{r include=FALSE}
 
-Samples <- read_excel("GC_data.xlsx", sheet = "Heatmap1_total_production")
+Samples <- read_excel("./Data_in/GC_data.xlsx", sheet = "Total_production")
+
 Samples.df <- as.data.frame(Samples)
+
 rownames(Samples.df) <- Samples$`Sample`
 
-vol_total <- ggplot(Samples.df, aes(x=Samples.df$`Sample`, y=Samples.df$'Grand Total', fill=Samples.df$`Grand Total`)) + geom_bar(stat="identity") + guides(fill=FALSE) + theme(axis.text.x = element_text(angle = 90, hjust = 1)) + ylab("ng of Volatiles") + xlab("Sample") + scale_fill_gradient(low="red", high="blue") + geom_hline(yintercept=500, linetype="dotted")
+vol_total <- ggplot(Samples.df, aes(x=Samples.df$`Sample`, y=Samples.df$`Detected Volatiles (ng)`, fill=Samples.df$`Detected Volatiles (ng)`)) + geom_bar(stat="identity") + guides(fill=FALSE) + theme(axis.text.x = element_text(angle = 90, hjust = 1)) + ylab("ng of Volatiles") + xlab("Sample") + scale_fill_gradient(low="red", high="blue") + geom_hline(yintercept=200, linetype="dotted")
 
 ```
 
 ```{r totes, echo=FALSE, warning=FALSE, out.width = "90%", fig.pos="H",fig.cap="Effect of the most abundance VOCs produced by bacteria on Rhizopus growth after 24 hours"}
+png("./R-plots/totalGCMS.png")
 vol_total
+dev.off()
+```
+
+```{r tempname, echo=FALSE, out.width = "90%", fig.pos = "H", fig.cap="Table of differentially produced volatiles"}
+
+volatable <- read_excel("./Data_in/GC_data.xlsx", sheet = "Volatable")
+volatable.df <- as.data.frame(volatable)
+volatable.m <- melt(volatable.df)
+volatable.sub <- subset(volatable.m, volatable.m$value > 0)
+rownames(volatable.sub) <- NULL
+write.csv(volatable.sub, "./R-plots/volatable.csv", row.names = FALSE, col.names = c("Compound", "Sample", "Mass Detected (ng)"))
+read.csv
+
+library(kableExtra)
+
+#webshot::install_phantomjs()
+volatable.table <- volatable.sub %>%
+  kable(col.names = c("Compound", "Sample", "Mass Detected (ng)")) %>%
+  kable_styling(bootstrap_options = c("striped", "hover"))%>%
+  save_kable("./R-plots/volatable.pdf")
+
+help(kable)
+knitr::kable(volatable.sub, col.names = c("Compound", "Sample", "Mass Detected (ng)"))
+kable_styling(volatable.sub, bootstrap_options = c("striped", "hover"))
+save_kable("./R-plots/volatable.pdf")
 
 ```
 
+
 ```{r venndia, echo=FALSE,fig.pos="H", out.width = "90%",fig.cap="Over lap of related volatiles produced by three species of bacteria"}
 
-grid.newpage()
-Venn <- draw.triple.venn(area1 = 34, area2 = 31, area3 = 29, n12 = 16, n23 = 23, n13 = 16, n123 = 13, category = c("Bsub", "Smar", "Spro"), lty = rep("solid", 3), fill = c("lightcoral", "olivedrab3", "lightblue2"))
 
+grid.newpage()
+  Venn <- draw.triple.venn(area1 = 27, area2 = 25, area3 = 23, n12 = 4, n23 = 16, n13 = 4, n123 = 4, category = c("Bsub", "Smar", "Spro"), lty = rep("solid", 3), fill = c("lightcoral", "olivedrab3", "lightblue2"))
+
+  
+png("./R-plots/Venn.png")
+
+grid.newpage()
+  Venn <- draw.triple.venn(area1 = 27, area2 = 25, area3 = 23, n12 = 4, n23 = 16, n13 = 4, n123 = 4, category = c("Bsub", "Smar", "Spro"), lty = rep("solid", 3), fill = c("lightcoral", "olivedrab3", "lightblue2"))
+  
+dev.off()
 
 ```
 
 
 ```{r include=FALSE}
 #NMDS Plot
-volatiles <- read_excel("GC_data.xlsx", sheet = "NMDS_1")
-volatiles_names <- read_excel("GC_data.xlsx", sheet = "NMDS_2")
+library(vegan)
+volatiles <- read_excel("./Data_in/GC_data.xlsx", sheet = "NMDS_1")
+volatiles_names <- read_excel("./Data_in/GC_data.xlsx", sheet = "NMDS_2")
 
 rownames(volatiles) <- volatiles_names$Sample
 
 volatiles.matrix=as.matrix(volatiles)
 
-NMDS=metaMDS(volatiles.matrix, k=2)
+vol.rel <- decostand(volatiles.matrix, method = "total")
+vol.rel_distmat <- vegdist(vol.rel, method = "bray")
+vol.rel_distmat <- as.matrix(vol.rel_distmat, labels = T)
+write.csv(vol.rel_distmat, "volatiles_relative_distance_matrix_nmds.csv")
 
-stressplot(NMDS)
-plot(NMDS)
+vol.rel_NMS <- metaMDS(vol.rel_distmat, distance = "bray", k = 2, maxit = 999, trymax = 500, wascores = TRUE)
+
+goodness(vol.rel_NMS)
+stressplot(vol.rel_NMS)
+plot(vol.rel_NMS)
 
 ``` 
 
-
-
-```{r include=FALSE}
-
-#import tables and combine
-
-#RSI is the number Kerry uses
-Over85 <- read_excel("Volatile.xlsx", sheet = "RSI_Over85")
-volatiles <- Over85
-#volatiles <- total
-volatiles.bk <- volatiles
-
-
-#RSI without unique individuals
-NUOver85 <- read_excel("Volatile.xlsx", sheet = "RSI_Over85_nounique")
-volatiles <- NUOver85
-#volatiles <- total
-volatiles.bk <- volatiles
-
-
-# Run clustering
-volatiles.matrix <- as.matrix(volatiles)
-#head(volatiles.matrix)
-rownames(volatiles.matrix) <- volatiles$Sample
-
-#table optional (doesn't consider amounts)
-volatiles.table <- dcast(volatiles, Sample ~ variable)
-volatiles.table
-rownames(volatiles.table) <- volatiles.table$Sample
-#volatiles.table
-#write.table(volatiles.table, "vol_table.txt", sep="\t")
-
-
-# Create dendro
-volatile.dendro <- as.dendrogram(hclust(d = dist(x = volatiles.table)))
-dendro.plot <- ggdendrogram(data = volatile.dendro, rotate = TRUE)
-
-# Preview the plot
-dendro.plot
-pdf("over75_vol_dendro.pdf", height = 8, width = 16)
-  dendro.plot
-dev.off()
-
-#make heatmap
-volatiles
-volatiles.matrix <- as.matrix(volatiles)
-volatiles.df <- as.data.frame(volatiles.matrix)
-volatiles.df
-
-volatiles.long <- melt(volatiles, id = c("Sample", "variable", "value"))
-
-
-volatiles.long$value <- as.numeric(as.character(volatiles.long$value))
-#write.table(volatiles.long, "vol_melt2.txt", sep="\t")
-
-
-heatmap.plot <- ggplot(data = volatiles.long, aes(x = Sample, y = variable)) +
-  geom_tile(aes(fill = value)) +
-  scale_color_gradient2(na.value = "black") +  ylab("Compound") +
-  xlab("Bacteria strains tested") +
-  theme(axis.text.x = element_text(angle = 90, hjust = 1)) +
-  labs(fill = "Detected Amount (ng)")
-heatmap.plot
-
-
-pdf("RSI_over85_noUnique_vol_heat.pdf", height = 32, width = 12)
-  heatmap.plot
-dev.off()
-
-#Order Branches
-branch.order <- order.dendrogram(volatile.dendro)
-volatiles.long$Sample <- factor(x = volatiles.long$Sample,
-                                levels = unique(volatiles.long$Sample[branch.order]), 
-                                ordered = TRUE)
-#make sorted heatmap
-heatmap.plot.sorted <- ggplot(data = volatiles.long, aes(x = Sample, y = variable)) +
-  geom_tile(aes(fill = log10(value))) +
-  scale_fill_gradient(low = "white", high = "blue", na.value = "black") +  ylab("Compound") +
-  xlab("List of Strains") +
-  theme(axis.text.x = element_text(angle = 90, hjust = 1)) +
-  labs(fill = "ng detected (log10)")
-
-heatmap.plot.sorted
-
-# Save sorted heatmap
-pdf("heatmap_dendro_sorted.pdf", height = 12, width = 12)
-heatmap.plot.sorted
-dev.off()
-
-```
-
-```{r include=FALSE}
-
-#Grab and shape data
-vol <- read_excel("GC_data.xlsx", sheet = "Heatmap_4_average")
-vol.df <- as.data.frame(vol)
-rownames(vol.df) <- vol$Volatile
-
-#Cluster
-vol.df <- vol.df[,2:4]
-vol.m <- as.matrix(vol.df)
-vol.dendro <- as.dendrogram(hclust(d = dist(x=vol.m)))
-dendro.plot.RSI85.Average <- ggdendrogram(data=vol.dendro, rotate = TRUE)
-dendro.plot.RSI85.Average
-
-#Heatmap
-vol.long <- melt(vol.m)
-vol.heatmap.RSI85.average <- ggplot(data = vol.long, mapping = aes(x = Var2, y = Var1, fill = value)) +
-  geom_tile() + xlab(label = "Bacteria") +  ylab("Compound") +
-  labs(fill = "Detected Amount (ng)") + theme(axis.text.x = element_text(angle = 90, hjust = 1))
-
-vol.heatmap.RSI85.average 
-
-#HIGH Heat
-
-#Grab and shape data
-vol <- read_excel("GC_data.xlsx", sheet = "Heatmap_4_high")
-vol.df <- as.data.frame(vol)
-
-rownames(vol.df) <- vol$Volatile
-
-
-#Cluster
-vol.df <- vol.df[,2:4]
-vol.m <- as.matrix(vol.df)
-vol.dendro <- as.dendrogram(hclust(d = dist(x=vol.m)))
-dendro.plot.RSI85.High <- ggdendrogram(data=vol.dendro, rotate = TRUE)
-dendro.plot.RSI85.High
-
-
-#Heatmap
-vol.long <- melt(vol.m)
-vol.heatmap.RSI85.High <- ggplot(data = vol.long, mapping = aes(x = Var2, y = Var1, fill = value)) +
-  geom_tile() + xlab(label = "Bacteria") +  ylab("Compound") +
-  labs(fill = "Detected Amount (ng)")
-
-vol.heatmap.RSI85.High
-
-```
-
-```{r ave_heat, echo=FALSE, out.width = "90%", fig.pos="H",fig.cap="Average volatile production across all samples"}
-vol.heatmap.RSI85.average
-```
-
-```{r high_heat, echo=FALSE, out.width = "90%", fig.pos="H",fig.cap="Average volatile production across all samples with "}
-vol.heatmap.RSI85.High
-```
-
 ```{r nmds, echo=FALSE, out.width = "90%", fig.pos="H",fig.cap="NMDS showing differences between Bacillus and Serratia"}
 
-treat=c(rep("Bsub",9),rep("Smar",8),rep("Spro",8))
-ordiplot(NMDS,type="points")
-ordihull(NMDS,groups=treat,draw="polygon",col=c("red", "blue", "green"),label=F, scaling = 3, main = expression(air == 2), cex = 1)
-legend(x="bottomleft", legend=unique(treat), col=c("red", "blue", "green"), pch=16)
-#orditorp(NMDS,display="sites",col=c(rep("blue",9),rep("red",8),rep("black",8)), air=1)
+treat=c(rep("Bsub",6),rep("Smar",6),rep("Spro",8))
+ordiplot(vol.rel_NMS,type="points")
+ordihull(vol.rel_NMS,groups=treat,draw="polygon",col=c("green", "red", "blue"),label=F, scaling = 3, main = expression(air == 2), cex = 1)
+legend(x="bottomleft", legend=unique(treat), col=c("green", "red", "blue"), pch=16)
+
+png("./R-plots/NMDS.png")
+treat=c(rep("Bsub",6),rep("Smar",6),rep("Spro",8))
+ordiplot(vol.rel_NMS,type="points")
+ordihull(vol.rel_NMS,groups=treat,draw="polygon",col=c("green", "red", "blue"),label=F, scaling = 3, main = expression(air == 2), cex = 1)
+legend(x="bottomleft", legend=unique(treat), col=c("green", "red", "blue"), pch=16)
+dev.off()
+
 ```
 
 ```{r metabolanalyst_nooutliers, echo=FALSE, include=FALSE}
@@ -426,7 +336,7 @@ if (!requireNamespace("BiocManager", quietly = TRUE))
 library(MetaboAnalystR)
 
 mSet<-InitDataObjects("conc", "stat", FALSE)
-mSet<-Read.TextData(mSet, "./MetaboAnalyst_data_removed_outliers.csv", "rowu", "disc");
+mSet<-Read.TextData(mSet, "./MetaboAnalysis_Data//MetaboAnalyst_data_removed_outliers.csv", "rowu", "disc");
 mSet<-SanityCheckData(mSet)
 mSet<-ReplaceMin(mSet);
 mSet<-PreparePrenormData(mSet)
@@ -437,6 +347,9 @@ mSet<-ANOVA.Anal(mSet, F, 0.05, "fisher", FALSE)
 mSet<-PlotANOVA(mSet, "aov_2_", "png", 600, width=NA)
 mSet<-ANOVA.Anal(mSet, F, 0.05, "tukey", FALSE)
 mSet<-PlotANOVA(mSet, "aov_3_", "png", 600, width=NA)
+und<-PlotCmpdView(mSet, "2-Undecanone", "png", 72, width=NA)
+dmts<-PlotCmpdView(mSet, "Dimethyl trisulfide", "png", 72, width=NA)
+ani<-PlotCmpdView(mSet, "Anisole", "png", 72, width=NA)
 mSet<-PCA.Anal(mSet)
 mSet<-PlotPCAPairSummary(mSet, "pca_pair_2_", "png", 600, width=NA, 5)
 mSet<-PlotPCAScree(mSet, "pca_scree_2_", "png", 600, width=NA, 5)
@@ -445,10 +358,11 @@ mSet<-PlotPCALoading(mSet, "pca_loading_2_", "png", 600, width=NA, 1,2);
 mSet<-PlotPCABiplot(mSet, "pca_biplot_2_", "png", 600, width=NA, 1,2)
 mSet<-PlotPCA3DScoreImg(mSet, "pca_score3d_2_", "png", 600, width=NA, 1,2,3, 40)
 #mSet<-PlotPCA3DLoading(mSet, "pca_loading3d_2_", "json", 1,2,3)
-mSet<-PlotHeatMap(mSet, "heatmap_2_", "png", 72, width=NA, "norm", "row", "euclidean", "ward.D","bwm", "overview", T, T, NA, T, F)
-mSet<-PlotSubHeatMap(mSet, "heatmap_3_", "png", 600, width=NA, "norm", "row", "euclidean", "ward.D","bwm", "tanova", 13, "overview", T, T, T, F)
-mSet<-PlotSubHeatMap(mSet, "heatmap_3_", "png", 600, width=NA, "norm", "row", "correlation", "ward.D","bwm", "tanova", 13, "overview", T, T, T, F)
-mSet<-PlotSubHeatMap(mSet, "heatmap_3_", "png", 600, width=NA, "norm", "row", "correlation", "average","bwm", "tanova", 13, "overview", T, T, T, F)
+mSet<-PlotHeatMap(mSet, "heatmap_1_", "png", 72, width=NA, "norm", "row", "euclidean", "ward.D","bwm", "overview", T, T, NA, T, F)
+#mSet<-PlotSubHeatMap(mSet, "heatmap_3_", "png", 600, width=NA, "norm", "row", "euclidean", "ward.D","bwm", "tanova", 58, "overview", T, T, T, F)
+#mSet<-PlotSubHeatMap(mSet, "heatmap_3_", "png", 600, width=NA, "norm", "row", "correlation", "ward.D","bwm", "tanova", 58, "overview", T, T, T, F)
+mSet<-PlotSubHeatMap(mSet, "heatmap_3_", "png", 600, width=NA, "norm", "row", "correlation", "average","bwm", "tanova", 63, "overview", T, T, T, F)
+mSet<-PlotHeatMap(mSet, "heatmap_2_", "png", 600, width=NA, "norm", "row", "correlation", "average","bwm", "overview", T, T, NA, T, F)
 mSet<-RF.Anal(mSet, 500,7,1)
 mSet<-PlotRF.Classify(mSet, "rf_cls_2_", "png", 72, width=NA)
 mSet<-PlotRF.VIP(mSet, "rf_imp_2_", "png", 72, width=NA)
@@ -458,41 +372,24 @@ mSet<-PlotRF.Classify(mSet, "rf_cls_3_", "png", 600, width=NA)
 mSet<-PlotRF.VIP(mSet, "rf_imp_3_", "png", 72, width=NA)
 mSet<-PlotRF.Outlier(mSet, "rf_outlier_3_", "png", 600, width=NA)
 mSet<-PlotHCTree(mSet, "tree_2_", "png", 600, width=NA, "spearman", "average")
-acetyl<-PlotCmpdView(mSet, "2-Acetylthiazole", "png", 72, width=NA)
-dodeca<-PlotCmpdView(mSet, "2-Dodecanone", "png", 72, width=NA)
-hepta5meth<-PlotCmpdView(mSet, "2-Heptanone, 5-methyl-", "png", 72, width=NA)
-hepta6meth<-PlotCmpdView(mSet, "2-Heptanone, 6-methyl-", "png", 72, width=NA)
-nona<-PlotCmpdView(mSet, "2-Nonanol", "png", 72, width=NA)
-undeca<-PlotCmpdView(mSet, "2-Undecanone", "png", 72, width=NA)
-anisole<-PlotCmpdView(mSet, "Anisole", "png", 72, width=NA)
-benzene<-PlotCmpdView(mSet, "Benzene, 1-chloro-2-methoxy-", "png", 72, width=NA)
-benzyl<-PlotCmpdView(mSet, "Benzyl alcohol", "png", 72, width=NA)
-cyclopenta<-PlotCmpdView(mSet, "Cyclopentasiloxane, decamethyl-", "png", 72, width=NA)
-dmts<-PlotCmpdView(mSet, "Dimethyl trisulfide", "png", 72, width=NA)
 
-img1 <-  rasterGrob(as.raster(readPNG("2-Acetylthiazole_dpi72.png")), interpolate = FALSE)
-img2 <-  rasterGrob(as.raster(readPNG("Dimethyl trisulfide_dpi72.png")), interpolate = FALSE)
-img3 <-  rasterGrob(as.raster(readPNG("2-Dodecanone_dpi72.png")), interpolate = FALSE)
-img4 <-  rasterGrob(as.raster(readPNG("2-Heptanone, 5-methyl-_dpi72.png")), interpolate = FALSE)
-img5 <-  rasterGrob(as.raster(readPNG("2-Heptanone, 6-methyl-_dpi72.png")), interpolate = FALSE)
-img6 <-  rasterGrob(as.raster(readPNG("2-Nonanol_dpi72.png")), interpolate = FALSE)
-img7 <-  rasterGrob(as.raster(readPNG("2-Undecanone_dpi72.png")), interpolate = FALSE)
-img8 <-  rasterGrob(as.raster(readPNG("Anisole_dpi72.png")), interpolate = FALSE)
-img9 <-  rasterGrob(as.raster(readPNG("Benzene, 1-chloro-2-methoxy-_dpi72.png")), interpolate = FALSE)
-img10 <-  rasterGrob(as.raster(readPNG("Benzyl alcohol_dpi72.png")), interpolate = FALSE)
-img11 <-  rasterGrob(as.raster(readPNG("Cyclopentasiloxane, decamethyl-_dpi72.png")), interpolate = FALSE)
+img1 <-  rasterGrob(as.raster(readPNG("./Dimethyl trisulfide_dpi72.png")), interpolate = FALSE)
+img2 <-  rasterGrob(as.raster(readPNG("./2-Undecanone_dpi72.png")), interpolate = FALSE)
+img3 <-  rasterGrob(as.raster(readPNG("./Anisole_dpi72.png")), interpolate = FALSE)
 
-pdf("difexprvol.pdf")
-grid.arrange(img1, img2, img3, img4, img5, img6, img7, img8, img9, img10, img11, nrow = 3, ncol = 4)
+png("./R-plots/difexprvol.png", width = 960)
+grid.arrange(img1, img2, img3, nrow = 1)
 dev.off
 ```
 
 
 ```{r pca, echo=FALSE, out.width = "90%", fig.pos="H",fig.cap="PCA plot showing variation amount samples of Bsub, Smar, and Spro"}
+
 knitr::include_graphics("pca_score3d_2_dpi600.png")
 ```
+
 ```{r meta_heat, echo=FALSE, out.width = "90%", fig.pos="H", fig.cap="Shows autoscaled volatiles and the production relative to each sample"}
-knitr::include_graphics("heatmap_3_dpi600.png")
+knitr::include_graphics("./heatmap_3_dpi600.png")
 ```
 
 ```{r meta_heat_ave, echo=FALSE, out.width = "90%", fig.pos="H", fig.cap="Average of volatiles produced by each species of bacteria"}
@@ -505,18 +402,23 @@ knitr::include_graphics("aov_2_dpi600.png")
 
 ```{r tempname, echo=FALSE, out.width = "90%", fig.pos = "H", fig.cap="Table of differentially produced volatiles"}
 
-anov_res <- read_excel("Volatile.xlsx", sheet = "ANOVA")
+anov_res <- read_excel("./Data_in/GC_data.xlsx", sheet = "ANOVA")
 anov_res <- as.data.frame(anov_res)
 
-anov_res %>%
+library(kableExtra)
+#webshot::install_phantomjs()
+table_vol <- anov_res %>%
   kable() %>%
-  kable_styling(bootstrap_options = c("striped", "hover"))
+  kable_styling(bootstrap_options = c("striped", "hover"))%>%
+  save_kable("./R-plots/ANOVA-table.pdf")
+
 
 ```
 
 
 ```{r anova_compounds, echo=FALSE, out.width = "100%", fig.pos="H", fig.cap="Relationship of differentially produced volatiles between each bacteria species"}
 grid.arrange(img1, img2, img3, img4, img5, img6, img7, img8, img9, img10, img11, nrow = 3, ncol = 4)
+
 ```
 
 
@@ -524,16 +426,18 @@ grid.arrange(img1, img2, img3, img4, img5, img6, img7, img8, img9, img10, img11,
 # Pure volatile inhibition
 #Get pure volatile assay data
 
-abund <- read_excel("Volatile.xlsx", sheet = "Abundant_VOC_RS_24")
+abund <- read_excel("./Data_in/Volatile.xlsx", sheet = "Abundant_VOC_RS_24")
 abund.m <- melt(as.data.frame(abund), id.vars = "Compound")
 abund.m$Compound <- factor(abund.m$Compound, levels = c("Dimethyl trisulfide","Anisole", "2-Undecanone", "2,5-Dimethylpyrazine",  "Lepidine", "5-Methyl-2-furylmethanol","Tropone","Blank"))
 
-abund.plot = ggplot(abund.m, aes(x=Compound, y=abund.m$value, fill=Compound)) + geom_boxplot() + ylab("Diameter of Rhizopus mycelium (cm)") + xlab("10mg of Compound") + coord_flip() +  guides(fill=FALSE)
+abund.plot = ggplot(abund.m, aes(x=Compound, y=abund.m$value, fill=Compound)) + geom_boxplot() + ylab("Diameter of Rstol mycelium (cm)") + xlab("10mg of Compound") + coord_flip() +  guides(fill=FALSE)
 
 ```
 
 ```{r abundance, echo=FALSE, out.width = "90%", fig.pos="H",fig.cap="Growth measurements after 24 hours of exposure to 10mg of each compound"}
+png("./R-plots/vol_mycelia.png")
 abund.plot 
+dev.off()
 ```
 
 ```{r microscopy, echo=FALSE, out.width="90%", fig.cap="Panel of Microscope images"}
@@ -545,14 +449,64 @@ micro_an <-  rasterGrob(as.raster(readPNG("images/40x_An_1.png")), interpolate =
 micro_dmts <-  rasterGrob(as.raster(readPNG("images/40x_DMTS_7.png")), interpolate = FALSE)
 
 library(cowplot)
-plot_grid(micro_con, micro_dmpz, micro_und, micro_an, micro_dmts, labels = c('A', 'B', 'C', 'D', 'E'), label_size = 12)
-title = cowplot::ggdraw() + cowplot::draw_label("40X "~italic(Rhizopus)~ " Hyphae Exposed to Volatiles", size = 20)
-top_row = cowplot::plot_grid(micro_con, micro_dmpz, micro_und, labels = c('A', 'B', 'C'), label_size = 12, ncol=3)
-bottom_row = cowplot::plot_grid(micro_an, micro_dmts, labels = c('D', 'E'),label_size = 12, ncol=2)
 
-cowplot::plot_grid(title, top_row, bottom_row, ncol=1)
+title = cowplot::ggdraw() + cowplot::draw_label("40X "~italic(Rhizopus)~ " Hyphae Exposed to Volatiles", size = 20)
+top_row = cowplot::plot_grid(micro_con, micro_dmpz, micro_und, labels = c('A', 'B', 'C'), ncol=3)
+bottom_row = cowplot::plot_grid(micro_an, micro_dmts, labels = c('D', 'E'), ncol=2)
+
+plot_grid(top_row, bottom_row, ncol=1)
+
+png("R-plots/Micro.png")
+plot_grid(top_row, bottom_row, ncol=1)
+dev.off()
+
 ```
 
+
+```{r genus_volatiles, include=FALSE}
+
+genus_gc <- read_excel("/Volumes/GoogleDrive/My Drive/Lab/Serratia/Volatiles_Rmd/GC_data.xlsx", sheet = "Comparative_genus")
+genus_gc
+
+# Create dendro
+rownames(genus_gc) <- genus_gc$Strain
+genus_gc
+gc.dendro <- as.dendrogram(hclust(d = dist(x = genus_gc)))
+dendro.plot <- ggdendrogram(data = gc.dendro, rotate = TRUE)
+
+# Preview the plot
+dendro.plot
+
+#make heatmap
+
+gc.long <- melt(genus_gc, id = "Strain")
+
+#ggplot(genus_gc.m, aes(Samples, variable, fill=value)) + geom_tile()
+
+
+heatmap.plot <- ggplot(data = gc.long, aes(x = Strain, y = variable)) +
+  geom_tile(aes(fill = value)) +
+  scale_color_gradient2(na.value = "black") +  ylab("Compound") +
+  xlab("Bacteria strains") +
+  theme(axis.text.x = element_text(angle = 90, hjust = 1)) +
+  labs(fill = "Probability of Presence")
+heatmap.plot
+
+#Order Branches
+branch.order <- order.dendrogram(gc.dendro)
+gc.long$Samples <- factor(x = gc.long$Strain,
+                                levels = unique(gc.long$Strain[branch.order]), ordered = TRUE)
+
+
+#make sorted heatmap
+heatmap.plot.sorted <- ggplot(data = gc.long, aes(x = Strain, y = variable)) +
+  geom_tile(aes(fill = value)) +
+  scale_fill_gradient(low = "grey", high = "blue", na.value = "black") +  ylab("Compound") +
+  xlab("List of Strains") +
+  theme(axis.text.x = element_text(angle = 90, hjust = 1)) +
+  labs(fill = "Probability of Presence")
+
+heatmap.plot.sorted
 ```
 
 # Discussion:
